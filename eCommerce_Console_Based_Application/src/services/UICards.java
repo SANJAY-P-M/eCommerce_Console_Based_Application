@@ -20,4 +20,8 @@ public class UICards {
 		System.out.println("###################                           ##################");
 
 	}
+	
+	public static void printWarning(String message) {
+            System.out.println("\u001B[33m" + message + "\u001B[0m");
+	}
 }

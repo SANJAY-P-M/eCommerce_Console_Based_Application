@@ -7,9 +7,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
+import java.util.HashSet;
 
 import roles.Customer;
 import roles.User;
+import services.UICards;
 public class DatabaseController {
 	private static Connection connection;
 	public static void createConnection(){		
@@ -34,26 +36,41 @@ public class DatabaseController {
 			int rowsAffected = statement.executeUpdate();
 
 			if (rowsAffected == 1) {
-			    System.out.println("User inserted successfully!");
+			    System.out.println("      Hey welcome "+userName+"  !");
 			} else {
 			    System.out.println("Error inserting user.");
 			}
 
 			statement.close();
-		} catch (SQLIntegrityConstraintViolationException e) {
-//			Occurs when user try's to create with same mobileNmber
-			System.out.println("      Mobile number already exists   ");
-			return null;
 		}catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return new Customer(userName,mobileNumber);
 	}
 
+	//	OverLoading a method
+//	throws Exception when password is Invalid
+	public static User loginUser(String username, String password){
+		try {
+			PreparedStatement statement = connection.prepareStatement("SELECT mobileNumber,password FROM users WHERE userName = ?");
+			statement.setString(1, username);
+			ResultSet resultSet = statement.executeQuery();
+			if(resultSet.getString("password").equals(password)) {
+				return new Customer(username, resultSet.getString("mobileNumber"));
+			} else {
+				UICards.printWarning("Invalid password    ");
+				return null;
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 //	returns 
 //		if user exists -> ResultSet contains userName and Password
 //		else null
-	public static ResultSet getUserInformation(String username) {
+	public static ResultSet getUserInformationWithUsername(String username) {
 	    String sql = "SELECT userName,password FROM users WHERE userName = ?";
 	    PreparedStatement statement = null;
 	    ResultSet resultSet = null;
@@ -99,26 +116,6 @@ public class DatabaseController {
 	    }
 	}
 	
-//	OverLoading a method
-//	throws Exception when password is Invalid
-	public static User createUser(String username, String password) throws Exception{
-		try {
-	        PreparedStatement statement = connection.prepareStatement("SELECT userName, mobileNumber, password FROM users WHERE userName = ?");
-	        statement.setString(1, username);
-	        ResultSet resultSet = statement.executeQuery();
-	        if(!resultSet.next()) {
-	        	System.out.print("User Name does not exists");
-	        	return null;
-	        } else if(resultSet.getString("password").equals(password)) {
-	        		return new Customer(resultSet.getString("userName"),resultSet.getString("mobileNumber"));
-        	}
-//	        when password mismatch
-	        else throw new Exception("Invalid Pssword");
-	    } catch (SQLException e) {
-	        System.out.println("Error creating user: " + e.getMessage());
-	        return null;
-	    }
-	}
 
 	
 	public static void deleteRecord(String userName) {
@@ -146,6 +143,31 @@ public class DatabaseController {
 		} finally {
 			closeStatement(statement);
 		}
+	}
+
+	public static ResultSet getUserInformationWithMobileNumber(String mobileNumber) {
+		String sql = "SELECT userName,password FROM users WHERE mobileNumber = ?";
+	    PreparedStatement statement = null;
+	    ResultSet resultSet = null;
+
+	    try {
+	        // Use a PreparedStatement to prevent SQL injection
+	        statement = connection.prepareStatement(sql);
+	        statement.setString(1, mobileNumber);
+
+	        // Execute the query and check if any rows are returned
+	        resultSet = statement.executeQuery();
+	        if(resultSet.next()) return resultSet; // return userName and password
+	        else return null;
+
+	    } catch (SQLException e) {
+	        System.err.println("Error checking mobile number uniqueness: " + e.getMessage());
+	        return null; // returns null
+	    } finally {
+	        // Close resources to avoid leaks
+	        closeResultSet(resultSet);
+	        closeStatement(statement);
+	    }
 	}
 
 }

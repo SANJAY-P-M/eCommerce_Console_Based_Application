@@ -4,6 +4,7 @@ import java.util.Scanner;
 import doa.DatabaseController;
 import roles.User;
 import services.Authentication;
+import services.LoginServices;
 import services.UICards;
 public class Main {
 	public static void main(String[] args) {
@@ -14,7 +15,7 @@ public class Main {
 		
 		char input = scan.nextLine().charAt(0);
 		
-		User user;
+		User user = null;
 		
 		// After the switch case runs User changes into either customer or Admin
         // This is known as runtime polymorphism or dynamic polymorphism
@@ -22,11 +23,20 @@ public class Main {
 		switch (input) {
 		case 'N':
 		case 'n':
-			user = Authentication.createUser(scan);
+			Authentication.createNewUser(
+				LoginServices.getUniqueUser(scan),
+				LoginServices.getUniqueMobileNumber(scan),
+				LoginServices.getValidConfirmPassword(scan, LoginServices.getPassword(scan))
+			);
 			break;
 		case 'E':
 		case 'e':
-			user = Authentication.authenticate(scan);
+			while(user == null) {
+				user = Authentication.authenticate(
+						LoginServices.getExistingUserName(scan),
+						LoginServices.getPassword(scan)
+					);				
+			}
 			break;
 		default:
 			break;
