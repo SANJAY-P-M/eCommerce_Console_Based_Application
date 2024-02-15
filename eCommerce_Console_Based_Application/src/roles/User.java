@@ -6,13 +6,22 @@ public abstract class User {
 	protected String userName;
 	protected String mobileNumber;
 
-	void seeProfile() {
-		
+	public void seeProfile() {
+	    String profileInfo = String.format(
+	        "-----------------------\n" +
+	        "**Profile Information**\n" +
+	        "Username: %s\n" +
+	        "Mobile Number: %s\n" +
+	        "-----------------------",
+	        this.userName,
+	        this.mobileNumber);
+	    System.out.println(profileInfo);
 	}
+
 	
 //	yet to be implemented
-	void seeProducts();
-	void seeProductDetails();
-	void addToWishList();
-	void seeWishList();
+	abstract void seeProducts();
+	abstract void seeProductDetails();
+	abstract void addToWishList();
+	abstract void seeWishList();
 }

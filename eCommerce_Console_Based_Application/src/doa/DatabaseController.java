@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import roles.Coustomer;
+import roles.Customer;
 import roles.User;
 
 public class DatabaseController {
@@ -42,12 +42,12 @@ public class DatabaseController {
 		}catch (SQLException e) {
 			 e.printStackTrace();
 		}
-		return new Coustomer(userName,mobileNumber);
+		return new Customer(userName,mobileNumber);
 	}
 
 	public static boolean isUsernameTaken(String username) {
 		createConnection();
-	    String sql = "SELECT * FROM users WHERE userName = ?";
+	    String sql = "SELECT userName FROM users WHERE userName = ?";
 	    PreparedStatement statement = null;
 	    ResultSet resultSet = null;
 
@@ -61,7 +61,6 @@ public class DatabaseController {
 	        return resultSet.next(); // True if username exists, false otherwise
 
 	    } catch (SQLException e) {
-	        // Handle database errors gracefully
 	        System.err.println("Error checking username uniqueness: " + e.getMessage());
 	        return false; // Assume username isn't taken to avoid potential issues
 	    } finally {
@@ -77,7 +76,7 @@ public class DatabaseController {
 	        try {
 	            resultSet.close();
 	        } catch (SQLException e) {
-	            // Log or handle the exception as needed
+	        	e.printStackTrace();
 	        }
 	    }
 	}
@@ -87,8 +86,30 @@ public class DatabaseController {
 	        try {
 	            statement.close();
 	        } catch (SQLException e) {
-	            // Log or handle the exception as needed
+	        	e.printStackTrace();
 	        }
+	    }
+	}
+	
+//	OverLoading a method
+//	throws Exception when password is Invalid
+	public static User createUser(String username, String password) throws Exception{
+		createConnection();
+		try {
+	        PreparedStatement statement = connection.prepareStatement("SELECT userName, mobileNumber, password FROM users WHERE userName = ?");
+	        statement.setString(1, username);
+	        ResultSet resultSet = statement.executeQuery();
+	        if(!resultSet.next()) {
+	        	System.out.print("User Name does not exists");
+	        	return null;
+	        } else if(resultSet.getString("password").equals(password)) {
+	        		return new Customer(resultSet.getString("userName"),resultSet.getString("mobileNumber"));
+        	}
+//	        when password mismatch
+	        else throw new Exception("Invalid Pssword");
+	    } catch (SQLException e) {
+	        System.out.println("Error creating user: " + e.getMessage());
+	        return null;
 	    }
 	}
 

@@ -24,7 +24,7 @@ public class Main {
 			break;
 		case 'E':
 		case 'e':
-			user = FunctionalService.authenticate();
+			user = FunctionalService.authenticate(scan);
 			break;
 		default:
 			break;

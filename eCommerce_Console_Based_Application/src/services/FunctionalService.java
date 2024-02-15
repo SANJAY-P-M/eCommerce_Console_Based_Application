@@ -9,7 +9,8 @@ public class FunctionalService {
 	public static User createUser(Scanner scan) {
 	    String username, mobileNo, password, confirmPassword;
 	    User user = null;
-
+	    
+//	    When you authenticate in frontEnd of your application the you can reduce workLoad on server
 	    // Input validation loop
 	    while (user == null) {
 	        System.out.print("Enter your desired username: ");
@@ -39,13 +40,8 @@ public class FunctionalService {
 	            continue;
 	        }
 
-	        // Attempt to create user only after all validations pass
-	        try {
-	            user = DatabaseController.createUser(username, mobileNo, password);
-	        } catch (Exception e) {
-	            System.out.println("Error creating user: " + e.getMessage());
-	            continue; // Restart the loop to allow user to retry
-	        }
+            user = DatabaseController.createUser(username, mobileNo, password);
+            UICards.printWelcomeMessage(username);
 	    }
 
 	    System.out.println("Username successfully created!");
@@ -57,5 +53,37 @@ public class FunctionalService {
 		mobileNo.replaceAll("[^0-9]", "");
 		return mobileNo.length() == 10;
 	}
+
+
+	public static User authenticate(Scanner scan) {
+	    System.out.print("Enter username: ");
+	    String username = scan.nextLine();
+
+	    int maxAttempts = 3; // Set a maximum number of password attempts
+	    int attempts = 0;
+	    while (attempts < maxAttempts) {
+	        System.out.print("Enter password: ");
+	        String password = scan.nextLine();
+
+	        try {
+	            User user = DatabaseController.createUser(username, password);
+	            UICards.printWelcomeMessage(username);
+	            return user;
+	        } catch (Exception e) {
+	            attempts++;
+	            if (attempts < maxAttempts) {
+	                // Handle invalid password exception
+	                System.out.println("Invalid password. Please try again.");
+	            } else {
+	                // Maximum attempts reached
+	                System.out.println("Too many invalid password attempts.");
+	                return null; // Indicate authentication failure
+	            }
+	        }
+	    }
+
+	    return null; // If all attempts fail, return null
+	}
+
 
 }

@@ -13,4 +13,11 @@ public class UICards {
 		System.out.println("[N] New User");
 		System.out.println("[E] Existing User");
 	}
+
+	public static void printWelcomeMessage(String userName) {
+		System.out.println("###################                           ##################");
+		System.out.println("################### WELCOME "+userName+"      ##################");
+		System.out.println("###################                           ##################");
+
+	}
 }

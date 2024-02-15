@@ -1,33 +1,34 @@
 package roles;
 
-public class Coustomer extends User{
-	public Coustomer(String userName , String mobileNumber){
+public class Customer extends User{
+	public Customer(String userName , String mobileNumber){
 		this.userName = userName;
 		this.mobileNumber = mobileNumber;
 	}
-	@Override
-	public void seeProfile() {
-		// TODO Auto-generated method stub
-		
-		
-	}
 
 	@Override
-	public void seeProducts() {
+	void seeProducts() {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void seeProductDetails() {
+	void seeProductDetails() {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void addToWishList() {
+	void addToWishList() {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	void seeWishList() {
+		// TODO Auto-generated method stub
+		
+	}
+	
 
 }
