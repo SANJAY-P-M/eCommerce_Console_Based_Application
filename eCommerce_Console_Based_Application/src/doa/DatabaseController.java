@@ -5,18 +5,19 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
 
 import roles.Customer;
 import roles.User;
-
 public class DatabaseController {
 	private static Connection connection;
-	private static void createConnection(){		
+	public static void createConnection(){		
 		try {
 			connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/ecommerce", "root", "12345");
 			
 		}catch(SQLException e) {
+			System.out.println("         Cannot connect to db server busy ");
 			e.printStackTrace();
 		}
 	}
@@ -39,15 +40,21 @@ public class DatabaseController {
 			}
 
 			statement.close();
+		} catch (SQLIntegrityConstraintViolationException e) {
+//			Occurs when user try's to create with same mobileNmber
+			System.out.println("      Mobile number already exists   ");
+			return null;
 		}catch (SQLException e) {
-			 e.printStackTrace();
+			e.printStackTrace();
 		}
 		return new Customer(userName,mobileNumber);
 	}
 
-	public static boolean isUsernameTaken(String username) {
-		createConnection();
-	    String sql = "SELECT userName FROM users WHERE userName = ?";
+//	returns 
+//		if user exists -> ResultSet contains userName and Password
+//		else null
+	public static ResultSet getUserInformation(String username) {
+	    String sql = "SELECT userName,password FROM users WHERE userName = ?";
 	    PreparedStatement statement = null;
 	    ResultSet resultSet = null;
 
@@ -58,11 +65,12 @@ public class DatabaseController {
 
 	        // Execute the query and check if any rows are returned
 	        resultSet = statement.executeQuery();
-	        return resultSet.next(); // True if username exists, false otherwise
+	        if(resultSet.next()) return resultSet; // return userName and password
+	        else return null;
 
 	    } catch (SQLException e) {
 	        System.err.println("Error checking username uniqueness: " + e.getMessage());
-	        return false; // Assume username isn't taken to avoid potential issues
+	        return null; // returns null
 	    } finally {
 	        // Close resources to avoid leaks
 	        closeResultSet(resultSet);
@@ -94,7 +102,6 @@ public class DatabaseController {
 //	OverLoading a method
 //	throws Exception when password is Invalid
 	public static User createUser(String username, String password) throws Exception{
-		createConnection();
 		try {
 	        PreparedStatement statement = connection.prepareStatement("SELECT userName, mobileNumber, password FROM users WHERE userName = ?");
 	        statement.setString(1, username);
@@ -111,6 +118,34 @@ public class DatabaseController {
 	        System.out.println("Error creating user: " + e.getMessage());
 	        return null;
 	    }
+	}
+
+	
+	public static void deleteRecord(String userName) {
+		PreparedStatement statement = null;
+		try {
+			statement = connection.prepareStatement("DELETE COLUMN FROM USERS WHERE userName = ?");
+			statement.setString(0, userName);
+			statement.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeStatement(statement);
+		}
+	}
+
+	public static void updateMobileNumber(String username ,String mobileNumber) {
+		PreparedStatement statement = null;
+		try {
+			statement = connection.prepareStatement("UPDATE USERS SET mobileNumber = ? WHERE userName = ?");
+			statement.setString(0, username);
+			statement.setString(1, mobileNumber);
+			statement.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeStatement(statement);
+		}
 	}
 
 }

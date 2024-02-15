@@ -1,11 +1,13 @@
 package eCommerce_Console_Based_Application;
 import java.util.Scanner;
 
+import doa.DatabaseController;
 import roles.User;
-import services.FunctionalService;
+import services.Authentication;
 import services.UICards;
 public class Main {
 	public static void main(String[] args) {
+		DatabaseController.createConnection();
 		Scanner scan = new Scanner(System.in);
 		UICards.printGreeting();
 		UICards.askRole();
@@ -20,11 +22,11 @@ public class Main {
 		switch (input) {
 		case 'N':
 		case 'n':
-			user = FunctionalService.createUser(scan);
+			user = Authentication.createUser(scan);
 			break;
 		case 'E':
 		case 'e':
-			user = FunctionalService.authenticate(scan);
+			user = Authentication.authenticate(scan);
 			break;
 		default:
 			break;
