@@ -3,7 +3,7 @@ package roles;
 public class Customer extends User{
 	public Customer(String userName , String mobileNumber){
 		this.userName = userName;
-		this.mobileNumber = mobileNumber;
+		this.setMobileNumber(mobileNumber);
 	}
 
 	@Override

@@ -3,25 +3,47 @@ package roles;
 //abstract classes are made to increase modularity our project
 public abstract class User {
 //	protected variables can be inherited to child class
-	protected String userName;
-	protected String mobileNumber;
+	private String fullName;
+	private String password;
+	private String email;
+	private String mobileNumber;
 
-	public void seeProfile() {
-	    String profileInfo = String.format(
-	        "\n                     -----------------------\n\n" +
-	        "                     **Profile Information**\n" +
-	        "                     Username: %s\n" +
-	        "                     Mobile Number: %s\n\n" +
-	        "                     -----------------------",
-	        this.userName,
-	        this.mobileNumber);
-	    System.out.println(profileInfo);
+	public String getPassword() {
+		return password;
 	}
 
-	
-//	yet to be implemented
-	abstract void seeProducts();
-	abstract void seeProductDetails();
-	abstract void addToWishList();
-	abstract void seeWishList();
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+
+	public String getEmail() {
+		return email;
+	}
+
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+
+	public String getMobileNumber() {
+		return mobileNumber;
+	}
+
+
+	public void setMobileNumber(String mobileNumber) {
+		this.mobileNumber = mobileNumber;
+	}
+
+
+	public String getFullName() {
+		return fullName;
+	}
+
+
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
+	}
 }

@@ -13,7 +13,7 @@ import roles.User;
 import services.UICards;
 public class UserTable {
 	
-	public static User createUser(String userName,String mobileNumber,String password) {
+	public static User insertNewUser(User user) {
 		try {
 			String sql = "INSERT INTO users (userName, mobileNumber, password,isAdmin) VALUES (?, ?, ?,0)";
 			PreparedStatement statement = Assets.connection.prepareStatement(sql);
