@@ -3,7 +3,7 @@ package services;
 import java.sql.ResultSet;
 import java.util.Scanner;
 
-import doa.DatabaseController;
+import doa.UserTable;
 
 public class LoginServices {
 	
@@ -12,11 +12,11 @@ public class LoginServices {
 		ResultSet userInformation = null;
 		String username;
         do{
-        	System.out.print("->  Enter your desired username: ");
+        	UICards.prompt("username: ");
         	username = scan.nextLine();
-        	userInformation = DatabaseController.getUserInformationWithUsername(username);
+        	userInformation = UserTable.getUserInformationWithUsername(username);
         	if(userInformation != null)
-        		System.out.println("Username already exists. Please choose another one."); 
+        		UICards.printWarning("Username already exists. Please choose another one."); 
         } while (userInformation != null); 	
 		return username;
 	}
@@ -25,9 +25,9 @@ public class LoginServices {
 		ResultSet userInformation = null;
 		String mobileNo;
 		do {
-        	System.out.print("->  Enter your mobile number (e.g., 1234567890): ");
+        	UICards.prompt("mobile number (e.g., 1234567890)");
         	mobileNo = scan.nextLine();
-        	userInformation = DatabaseController.getUserInformationWithMobileNumber(mobileNo);
+        	userInformation = UserTable.getUserInformationWithMobileNumber(mobileNo);
         	if (!isValidMobileNumber(mobileNo))
         		UICards.printWarning("Invalid mobile number format. Please try again.");
         	else if(userInformation != null) 
@@ -36,29 +36,30 @@ public class LoginServices {
 		return mobileNo;
 	}
 	
-//	gets confirm password which matches previous password
+	public static String getExistingUserName(Scanner scan) {
+		String userName;
+		ResultSet userInformation = null;
+		do {
+			UICards.prompt("username");
+			userName =  scan.nextLine();
+			userInformation = UserTable.getUserInformationWithUsername(userName);
+			if(userInformation == null)
+				UICards.printWarning("Username does not exists ");
+		}while(userInformation == null);
+		return userName;
+	}
+
+	//	gets confirm password which matches previous password
 	public static String getValidConfirmPassword(Scanner scan,String prevPassword) {
 		String confirmPassword;
 		do{
-			System.out.println(" ->  Enter confirm password : ");
+			UICards.prompt("confirm  password");
 			confirmPassword = scan.nextLine();
             if(!prevPassword.equals(confirmPassword)) UICards.printWarning("Passwords don't match. Please try again.");
         } while(!prevPassword.equals(confirmPassword));
         return confirmPassword;
 	}
 	
-	public static String getExistingUserName(Scanner scan) {
-		String userName;
-		ResultSet userInformation = null;
-		do {
-			System.out.print(" ->   Enter user name : ");
-			userName =  scan.nextLine();
-			userInformation = DatabaseController.getUserInformationWithUsername(userName);
-			if(userInformation == null)
-				UICards.printWarning("Username does not exists ");
-		}while(userInformation == null);
-		return userName;
-	}
 	
 //	mobile number validation
 	private static boolean isValidMobileNumber(String mobileNo) {
@@ -66,7 +67,7 @@ public class LoginServices {
 		return mobileNo.length() == 10;
 	}
 	public static String getPassword(Scanner scan) {
-		System.out.print(" -> Enter password : ");
+		UICards.prompt("password");
 		return scan.nextLine();
 	}
 }

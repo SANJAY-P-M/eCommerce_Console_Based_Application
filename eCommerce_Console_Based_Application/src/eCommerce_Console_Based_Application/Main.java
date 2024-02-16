@@ -1,18 +1,18 @@
 package eCommerce_Console_Based_Application;
 import java.util.Scanner;
 
-import doa.DatabaseController;
+import doa.UserTable;
 import roles.User;
 import services.Authentication;
 import services.LoginServices;
 import services.UICards;
 public class Main {
 	public static void main(String[] args) {
-		DatabaseController.createConnection();
+		UserTable.createConnection();
 		Scanner scan = new Scanner(System.in);
 		UICards.printGreeting();
-		UICards.askRole();
-		
+		String[] signUpPromptList = {"Sign up","Sign in","Close Application"};
+		UICards.printChoiceList(signUpPromptList);
 		char input = scan.nextLine().charAt(0);
 		
 		User user = null;
@@ -21,25 +21,24 @@ public class Main {
         // This is known as runtime polymorphism or dynamic polymorphism
 		
 		switch (input) {
-		case 'N':
-		case 'n':
-			Authentication.createNewUser(
+		case '1':
+			UICards.printSucessMessage("Creating new user....!");
+			user = Authentication.createNewUser(
 				LoginServices.getUniqueUser(scan),
 				LoginServices.getUniqueMobileNumber(scan),
 				LoginServices.getValidConfirmPassword(scan, LoginServices.getPassword(scan))
 			);
 			break;
-		case 'E':
-		case 'e':
-			while(user == null) {
-				user = Authentication.authenticate(
-						LoginServices.getExistingUserName(scan),
-						LoginServices.getPassword(scan)
-					);				
-			}
+		case '2':
+			UICards.printSucessMessage("Enter credencials");
+			user = Authentication.authenticate(
+					LoginServices.getExistingUserName(scan),
+					LoginServices.getPassword(scan)
+				);	
 			break;
-		default:
-			break;
+		case '3':
+			return;
 		}
+		user.seeProfile();
 	}	
 }

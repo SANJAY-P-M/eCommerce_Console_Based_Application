@@ -8,11 +8,11 @@ public abstract class User {
 
 	public void seeProfile() {
 	    String profileInfo = String.format(
-	        "-----------------------\n" +
-	        "**Profile Information**\n" +
-	        "Username: %s\n" +
-	        "Mobile Number: %s\n" +
-	        "-----------------------",
+	        "\n                     -----------------------\n\n" +
+	        "                     **Profile Information**\n" +
+	        "                     Username: %s\n" +
+	        "                     Mobile Number: %s\n\n" +
+	        "                     -----------------------",
 	        this.userName,
 	        this.mobileNumber);
 	    System.out.println(profileInfo);

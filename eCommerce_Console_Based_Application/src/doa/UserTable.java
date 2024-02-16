@@ -5,14 +5,12 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
-import java.util.HashSet;
 
 import roles.Customer;
 import roles.User;
 import services.UICards;
-public class DatabaseController {
+public class UserTable {
 	private static Connection connection;
 	public static void createConnection(){		
 		try {
@@ -32,15 +30,7 @@ public class DatabaseController {
 			statement.setString(1, userName);
 			statement.setString(2, mobileNumber);
 			statement.setString(3, password);
-
-			int rowsAffected = statement.executeUpdate();
-
-			if (rowsAffected == 1) {
-			    System.out.println("      Hey welcome "+userName+"  !");
-			} else {
-			    System.out.println("Error inserting user.");
-			}
-
+			statement.executeUpdate();
 			statement.close();
 		}catch (SQLException e) {
 			e.printStackTrace();
@@ -55,6 +45,7 @@ public class DatabaseController {
 			PreparedStatement statement = connection.prepareStatement("SELECT mobileNumber,password FROM users WHERE userName = ?");
 			statement.setString(1, username);
 			ResultSet resultSet = statement.executeQuery();
+			resultSet.next();
 			if(resultSet.getString("password").equals(password)) {
 				return new Customer(username, resultSet.getString("mobileNumber"));
 			} else {
