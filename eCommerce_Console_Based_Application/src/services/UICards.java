@@ -11,7 +11,6 @@ public class UICards {
 		System.out.println("#################################################                           ##################");
 		System.out.println("#################################################      WELCOME "+userName.toUpperCase()+"      ##################");
 		System.out.println("#################################################                           ##################");
-
 	}
 	
 	public static void printWarning(String message) {

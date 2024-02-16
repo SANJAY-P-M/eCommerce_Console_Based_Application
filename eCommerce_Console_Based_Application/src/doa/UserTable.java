@@ -7,25 +7,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import eCommerce_Console_Based_Application.Assets;
 import roles.Customer;
 import roles.User;
 import services.UICards;
 public class UserTable {
-	private static Connection connection;
-	public static void createConnection(){		
-		try {
-			connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/ecommerce", "root", "12345");
-			
-		}catch(SQLException e) {
-			System.out.println("         Cannot connect to db server busy ");
-			e.printStackTrace();
-		}
-	}
 	
 	public static User createUser(String userName,String mobileNumber,String password) {
 		try {
 			String sql = "INSERT INTO users (userName, mobileNumber, password,isAdmin) VALUES (?, ?, ?,0)";
-			PreparedStatement statement = connection.prepareStatement(sql);
+			PreparedStatement statement = Assets.connection.prepareStatement(sql);
 
 			statement.setString(1, userName);
 			statement.setString(2, mobileNumber);
@@ -42,7 +33,7 @@ public class UserTable {
 //	throws Exception when password is Invalid
 	public static User loginUser(String username, String password){
 		try {
-			PreparedStatement statement = connection.prepareStatement("SELECT mobileNumber,password FROM users WHERE userName = ?");
+			PreparedStatement statement = Assets.connection.prepareStatement("SELECT mobileNumber,password FROM users WHERE userName = ?");
 			statement.setString(1, username);
 			ResultSet resultSet = statement.executeQuery();
 			resultSet.next();
@@ -68,7 +59,7 @@ public class UserTable {
 
 	    try {
 	        // Use a PreparedStatement to prevent SQL injection
-	        statement = connection.prepareStatement(sql);
+	        statement = Assets.connection.prepareStatement(sql);
 	        statement.setString(1, username);
 
 	        // Execute the query and check if any rows are returned
@@ -112,7 +103,7 @@ public class UserTable {
 	public static void deleteRecord(String userName) {
 		PreparedStatement statement = null;
 		try {
-			statement = connection.prepareStatement("DELETE COLUMN FROM USERS WHERE userName = ?");
+			statement = Assets.connection.prepareStatement("DELETE COLUMN FROM USERS WHERE userName = ?");
 			statement.setString(0, userName);
 			statement.execute();
 		} catch (SQLException e) {
@@ -125,7 +116,7 @@ public class UserTable {
 	public static void updateMobileNumber(String username ,String mobileNumber) {
 		PreparedStatement statement = null;
 		try {
-			statement = connection.prepareStatement("UPDATE USERS SET mobileNumber = ? WHERE userName = ?");
+			statement = Assets.connection.prepareStatement("UPDATE USERS SET mobileNumber = ? WHERE userName = ?");
 			statement.setString(0, username);
 			statement.setString(1, mobileNumber);
 			statement.execute();
@@ -143,7 +134,7 @@ public class UserTable {
 
 	    try {
 	        // Use a PreparedStatement to prevent SQL injection
-	        statement = connection.prepareStatement(sql);
+	        statement = Assets.connection.prepareStatement(sql);
 	        statement.setString(1, mobileNumber);
 
 	        // Execute the query and check if any rows are returned
