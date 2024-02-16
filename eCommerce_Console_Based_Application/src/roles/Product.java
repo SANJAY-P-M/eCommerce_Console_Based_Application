@@ -6,11 +6,13 @@ public class Product {
 	private String description;
 	private double price;
 	private double review;
+	private int quantity;
 	
-	public Product(String id,String name,String description,double price,double review){
+	public Product(String id,String name,String description,double price,double review,int availableQuantity){
 		setId(id);
 		setName(name);
 		setDescription(description);
+		setQuantity(availableQuantity);
 		setPrice(price);
 		setReview(review);
 	}
@@ -44,5 +46,25 @@ public class Product {
 	}
 	public void setReview(double review) {
 		this.review = review;
+	}
+	
+	@Override
+	public String toString() {
+		 return "Product{" +
+	                "id='" + id + '\'' +
+	                ", name='" + name + '\'' +
+	                ", description='" + description + '\'' +
+	                ", price=" + price +
+	                ", review=" + review +
+	                ", quantity=" + quantity +
+	                '}';
+	}
+
+	public int getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
 	}
 }

@@ -1,155 +1,62 @@
 package doa;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
 
 import eCommerce_Console_Based_Application.Assets;
 import roles.Customer;
-import roles.User;
-import services.UICards;
 public class UserTable {
 	
-	public static User insertNewUser(User user) {
+//	returns
+//		true for success insert of data
+//		false if any exception occurred
+//		throws Exception when e-mail (or) mobile number already exists
+	public static boolean insertNewUser(Customer user) throws Exception{
+		PreparedStatement statement = null;
 		try {
-			String sql = "INSERT INTO users (userName, mobileNumber, password,isAdmin) VALUES (?, ?, ?,0)";
-			PreparedStatement statement = Assets.connection.prepareStatement(sql);
+			String sql = "INSERT INTO users (fullName, mobileNumber, password , email ,isAdmin) VALUES (?, ?, ?, ? ,0)";
+			statement = Assets.connection.prepareStatement(sql);
 
-			statement.setString(1, userName);
-			statement.setString(2, mobileNumber);
-			statement.setString(3, password);
-			statement.executeUpdate();
-			statement.close();
-		}catch (SQLException e) {
+			statement.setString(1, user.getFullName());
+			statement.setString(2, user.getMobileNumber());
+			statement.setString(3, user.getPassword());
+			statement.setString(4, user.getEmail());
+			return statement.executeUpdate() == 1;
+		} catch (SQLIntegrityConstraintViolationException e) {
+			
+//			This occurs when user try's to use same e-mail (or) mobile number 
+			if(e.getMessage().contains("users_UNIQUE")) throw new Exception("e-mail already exists");
+			else throw new Exception("mobile number already exists");
+			
+		} catch (SQLException e) {
 			e.printStackTrace();
+			return false;
+		}finally {
+			Assets.closeStatement(statement);			
 		}
-		return new Customer(userName,mobileNumber);
 	}
 
-	//	OverLoading a method
-//	throws Exception when password is Invalid
-	public static User loginUser(String username, String password){
+//	returns
+//		password for the given e-mail
+//		if e-mail does not exists (or) statement has error throws Exception
+	public static String getPassword(String email) throws Exception {
+		ResultSet result = null;
+		PreparedStatement statement = null;
 		try {
-			PreparedStatement statement = Assets.connection.prepareStatement("SELECT mobileNumber,password FROM users WHERE userName = ?");
-			statement.setString(1, username);
-			ResultSet resultSet = statement.executeQuery();
-			resultSet.next();
-			if(resultSet.getString("password").equals(password)) {
-				return new Customer(username, resultSet.getString("mobileNumber"));
-			} else {
-				UICards.printWarning("Invalid password    ");
-				return null;
-			}
+			String sql = "SELECT PASSWORD FROM USERS WHERE EMAIL = ? ";
+			statement =  Assets.connection.prepareStatement(sql);
+			statement.setString(1, email);
+			result = statement.executeQuery();
+			if(result.next()) return result.getString("password");
 		}catch (Exception e) {
 			e.printStackTrace();
-			return null;
+		} finally {			
+			Assets.closeResultSet(result);
+			Assets.closeStatement(statement);
 		}
+		throw new Exception("Invalid E-Mail");
 	}
-
-//	returns 
-//		if user exists -> ResultSet contains userName and Password
-//		else null
-	public static ResultSet getUserInformationWithUsername(String username) {
-	    String sql = "SELECT userName,password FROM users WHERE userName = ?";
-	    PreparedStatement statement = null;
-	    ResultSet resultSet = null;
-
-	    try {
-	        // Use a PreparedStatement to prevent SQL injection
-	        statement = Assets.connection.prepareStatement(sql);
-	        statement.setString(1, username);
-
-	        // Execute the query and check if any rows are returned
-	        resultSet = statement.executeQuery();
-	        if(resultSet.next()) return resultSet; // return userName and password
-	        else return null;
-
-	    } catch (SQLException e) {
-	        System.err.println("Error checking username uniqueness: " + e.getMessage());
-	        return null; // returns null
-	    } finally {
-	        // Close resources to avoid leaks
-	        closeResultSet(resultSet);
-	        closeStatement(statement);
-	    }
-	}
-
-	// Helper functions for closing resources (you might already have these)
-	private static void closeResultSet(ResultSet resultSet) {
-	    if (resultSet != null) {
-	        try {
-	            resultSet.close();
-	        } catch (SQLException e) {
-	        	e.printStackTrace();
-	        }
-	    }
-	}
-
-	private static void closeStatement(Statement statement) {
-	    if (statement != null) {
-	        try {
-	            statement.close();
-	        } catch (SQLException e) {
-	        	e.printStackTrace();
-	        }
-	    }
-	}
-	
-
-	
-	public static void deleteRecord(String userName) {
-		PreparedStatement statement = null;
-		try {
-			statement = Assets.connection.prepareStatement("DELETE COLUMN FROM USERS WHERE userName = ?");
-			statement.setString(0, userName);
-			statement.execute();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			closeStatement(statement);
-		}
-	}
-
-	public static void updateMobileNumber(String username ,String mobileNumber) {
-		PreparedStatement statement = null;
-		try {
-			statement = Assets.connection.prepareStatement("UPDATE USERS SET mobileNumber = ? WHERE userName = ?");
-			statement.setString(0, username);
-			statement.setString(1, mobileNumber);
-			statement.execute();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			closeStatement(statement);
-		}
-	}
-
-	public static ResultSet getUserInformationWithMobileNumber(String mobileNumber) {
-		String sql = "SELECT userName,password FROM users WHERE mobileNumber = ?";
-	    PreparedStatement statement = null;
-	    ResultSet resultSet = null;
-
-	    try {
-	        // Use a PreparedStatement to prevent SQL injection
-	        statement = Assets.connection.prepareStatement(sql);
-	        statement.setString(1, mobileNumber);
-
-	        // Execute the query and check if any rows are returned
-	        resultSet = statement.executeQuery();
-	        if(resultSet.next()) return resultSet; // return userName and password
-	        else return null;
-
-	    } catch (SQLException e) {
-	        System.err.println("Error checking mobile number uniqueness: " + e.getMessage());
-	        return null; // returns null
-	    } finally {
-	        // Close resources to avoid leaks
-	        closeResultSet(resultSet);
-	        closeStatement(statement);
-	    }
-	}
-
 }

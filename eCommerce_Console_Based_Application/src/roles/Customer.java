@@ -1,33 +1,65 @@
 package roles;
 
-public class Customer extends User{
-	public Customer(String userName , String mobileNumber){
-		this.userName = userName;
-		this.setMobileNumber(mobileNumber);
+import java.util.List;
+
+public class Customer{
+	private String fullName;
+	private String password;
+	private String email;
+	private String mobileNumber;
+	private List<Order> orders;
+	
+	public Customer(String fullName,String password,String email,String mobileNumber) {
+		setFullName(fullName);
+		setPassword(password);
+		setEmail(email);
+		setMobileNumber(mobileNumber);
+	}
+	public String getPassword() {
+		return password;
 	}
 
-	@Override
-	void seeProducts() {
-		// TODO Auto-generated method stub
-		
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
-	@Override
-	void seeProductDetails() {
-		// TODO Auto-generated method stub
-		
+
+	public String getEmail() {
+		return email;
 	}
 
-	@Override
-	void addToWishList() {
-		// TODO Auto-generated method stub
-		
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
-	@Override
-	void seeWishList() {
-		// TODO Auto-generated method stub
-		
+
+	public String getMobileNumber() {
+		return mobileNumber;
+	}
+
+
+	public void setMobileNumber(String mobileNumber) {
+		this.mobileNumber = mobileNumber;
+	}
+
+
+	public String getFullName() {
+		return fullName;
+	}
+
+
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
+	}
+	
+	public List<Order> getOrders() {
+		return orders;
+	}
+	
+	public void setOrders(List<Order> orders) {
+		this.orders = orders;
 	}
 	
 
