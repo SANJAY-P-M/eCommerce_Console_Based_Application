@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import eCommerce_Console_Based_Application.Assets;
+import roles.Cart;
 import roles.Customer;
 import roles.Order;
 import roles.Product;
@@ -55,10 +56,30 @@ public class OrderTable {
 		return list;
 	}
 	
-	public static boolean placeOrder(Product product,int quantity) {
+	public static Order placeOrder(Customer customer) throws Exception {
+		if(customer.getCart().getProducts().isEmpty()) throw new Exception("Cart is empty");
 		PreparedStatement statement = null;
+		ResultSet result = null;
+		List<Product> list = new ArrayList<>();
 		try {
-			statement = Assets.connection.prepareStatement("INSERT INTO ORDERS ( USERID ) VALUES( ? )");
+			statement = Assets.connection.prepareStatement("SELECT c.productId , c.quantity , p.productName , p.productDescription , p.price ,p.review  FROM CART c WHERE c.userName = ? JOIN PRODUCTS p ON o.productId = c.productId");
+			statement.setString(1, customer.getUserName());
+			result = statement.executeQuery();
+			while(result.next()) {
+				String productId = result.getString("c.productId");
+				int quantity = result.getInt("c.quantity");
+				String productName = result.getString("p.productName");
+				double price = result.getDouble("p.price");
+				double review = result.getDouble("p.review");
+				String description = result.getString("p.description");
+				Product product = new Product(productId, productName, description, price, review, quantity);
+				list.add(product);
+			}
+			return new Order(list);
+		}catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			Assets.closeStatement(statement);
 		}
 	}
 }

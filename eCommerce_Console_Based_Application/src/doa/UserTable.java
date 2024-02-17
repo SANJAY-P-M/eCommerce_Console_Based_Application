@@ -4,7 +4,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.sql.Statement;
 
 import eCommerce_Console_Based_Application.Assets;
 import roles.Customer;
@@ -12,43 +11,43 @@ public class UserTable {
 	
 //	returns
 //		true for success insert of data
-//		false if any exception occurred
-//		throws Exception when e-mail (or) mobile number already exists
-	public static boolean insertNewUser(Customer user) throws Exception{
+//		false if not inserted
+//		throws Exception when userName (or) e-mail (or) mobile number already exists
+	public static boolean insertNewUser(Customer customer) throws Exception{
 		PreparedStatement statement = null;
+		int rowsAffected = 0;
 		try {
-			String sql = "INSERT INTO users (fullName, mobileNumber, password , email ,isAdmin) VALUES (?, ?, ?, ? ,0)";
+			String sql = "INSERT INTO users (userName ,fullName, mobileNumber, password , email) VALUES ( ? , ? , ?, ?, ?)";
 			statement = Assets.connection.prepareStatement(sql);
-
-			statement.setString(1, user.getFullName());
-			statement.setString(2, user.getMobileNumber());
-			statement.setString(3, user.getPassword());
-			statement.setString(4, user.getEmail());
-			return statement.executeUpdate() == 1;
+			statement.setString(1, customer.getUserName());
+			statement.setString(2, customer.getFullName());
+			statement.setString(3, customer.getMobileNumber());
+			statement.setString(4, customer.getPassword());
+			statement.setString(5, customer.getEmail());
+			rowsAffected = statement.executeUpdate();
 		} catch (SQLIntegrityConstraintViolationException e) {
-			
-//			This occurs when user try's to use same e-mail (or) mobile number 
-			if(e.getMessage().contains("users_UNIQUE")) throw new Exception("e-mail already exists");
-			else throw new Exception("mobile number already exists");
-			
+			String errorMessage = e.getMessage();
+			if(errorMessage.contains("users.PRIMARY")) throw new Exception("userName already exists");
+			else if(errorMessage.contains("user.email")) throw new Exception("email already exists");
+			else throw new Exception("mobile number Already exists");
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return false;
 		}finally {
 			Assets.closeStatement(statement);			
 		}
+		return rowsAffected == 1;
 	}
 
 //	returns
 //		password for the given e-mail
 //		if e-mail does not exists (or) statement has error throws Exception
-	public static String getPassword(String email) throws Exception {
+	public static String getPassword(String userName) throws Exception {
 		ResultSet result = null;
 		PreparedStatement statement = null;
 		try {
-			String sql = "SELECT PASSWORD FROM USERS WHERE EMAIL = ? ";
+			String sql = "SELECT password FROM USERS WHERE userName = ? ";
 			statement =  Assets.connection.prepareStatement(sql);
-			statement.setString(1, email);
+			statement.setString(1, userName);
 			result = statement.executeQuery();
 			if(result.next()) return result.getString("password");
 		}catch (Exception e) {
@@ -57,6 +56,6 @@ public class UserTable {
 			Assets.closeResultSet(result);
 			Assets.closeStatement(statement);
 		}
-		throw new Exception("Invalid E-Mail");
+		throw new Exception("UserName Does not exists");
 	}
 }

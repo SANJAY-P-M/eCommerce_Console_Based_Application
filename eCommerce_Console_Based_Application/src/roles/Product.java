@@ -57,7 +57,7 @@ public class Product {
 	                ", price=" + price +
 	                ", review=" + review +
 	                ", quantity=" + quantity +
-	                '}';
+	                "}\n";
 	}
 
 	public int getQuantity() {
