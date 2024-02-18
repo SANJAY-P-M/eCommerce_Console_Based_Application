@@ -7,6 +7,42 @@ import java.sql.Statement;
 import java.util.Scanner;
 public class Assets {
 	
+	public static class StockNotAvailable extends Exception {
+		public StockNotAvailable(String productId,int availableQuantity) {
+			super(availableQuantity+" stock only availabe in productId "+productId);
+		}
+	}
+	public static class NoSuchProductException extends Exception {
+		public NoSuchProductException(String productId) {
+			super("product not found with productId : "+productId);
+		}
+	}
+	public static class NoUserFoundException extends Exception {
+		public NoUserFoundException() {
+			super("No user found");
+		}	
+	};
+	public static class UserNameAlreadyExistsException extends Exception {
+		public UserNameAlreadyExistsException() {
+			super("User already exists");
+		}
+	};
+	public static class EmailAlreadyExistsException extends Exception {
+		public EmailAlreadyExistsException() {
+			super("E mail already exists");
+		}	
+	};
+	public static class MobileNumberAlreadyExistsException extends Exception {
+		public MobileNumberAlreadyExistsException() {
+			super("Mobile number already exists");
+		}
+	};
+	public static class EmptyCartException extends Exception{
+		public EmptyCartException() {
+			super("Cart is empty");
+		}
+	};
+
 	public static Scanner scan = new Scanner(System.in);
 	
 //	Sign up prompt

@@ -1,17 +1,19 @@
 package roles;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class Order{
 	
 	private String orderId;
 	private List<Product> products;
-	private Date date;
+	private String date;
 	private String status;
 	private int totalAmount;
-	public Order(List<Product> list,Date date) {
-		setDate(date);
+	public Order(List<Product> list,LocalDateTime localDateTime) {
+		setDate(localDateTime);
 		setProduct(list);
 		setTotalAmount(calculateTotalAmount());
 	}
@@ -39,12 +41,12 @@ public class Order{
 		return this.orderId.equals(orderId);
 	}
 
-	public Date getDate() {
+	public String getDate() {
 		return date;
 	}
 
-	public void setDate(Date date) {
-		this.date = date;
+	public void setDate(LocalDateTime date) {
+		this.date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss"));
 	}
 
 	public String getStatus() {

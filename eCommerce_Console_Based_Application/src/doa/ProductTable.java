@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import eCommerce_Console_Based_Application.Assets;
+import eCommerce_Console_Based_Application.Assets.NoSuchProductException;
 import roles.Product;
 
 public class ProductTable {
@@ -71,7 +72,7 @@ public class ProductTable {
 //	returns
 //		Product object with matching productId
 //		if no product found throw Exception
-	public static Product getProduct(String productId) throws Exception {
+	public static Product getProduct(String productId) throws NoSuchProductException {
 		ResultSet result = null;
 		PreparedStatement statement = null;
 		try {
@@ -93,6 +94,45 @@ public class ProductTable {
 			Assets.closeResultSet(result);
 			Assets.closeStatement(statement);
 		}
-		throw new Exception("No Product found");
+		throw new Assets.NoSuchProductException(productId);
 	}
+	
+//	returns
+//		true  if product is available in given quantity 
+//		else false;
+//		throw Exception when there is no product with product Id
+	public static boolean isProductAvailable(String productId,int quantity) throws NoSuchProductException{
+		ResultSet result = null;
+		PreparedStatement statement = null;
+		int availableQuantity = -1;
+		try {
+			statement = Assets.connection.prepareStatement("SELECT availableQuantity FROM PRODUCTS WHERE productId = ?");
+			statement.setString(1, productId);
+			result = statement.executeQuery();
+			if(result.next()) availableQuantity = result.getInt("availableQuantity");
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			Assets.closeResultSet(result);
+			Assets.closeStatement(statement);
+		}
+		if(availableQuantity == -1) throw new Assets.NoSuchProductException(productId);
+		return (availableQuantity >= quantity);
+	}
+
+	public static void reduceQuantity(String productId, int quantity) throws NoSuchProductException {
+		PreparedStatement statement = null;
+		try {
+			statement = Assets.connection.prepareStatement("UPDATE TABLE PRODUCTS WHERE productId = ? SET availableQuantity = ?");
+			statement.setString(1, productId);
+			Product product = getProduct(productId);
+			statement.setInt(2, product.getQuantity()-quantity);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			Assets.closeStatement(statement);
+		}
+	}
+	
 }

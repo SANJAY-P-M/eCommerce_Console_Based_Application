@@ -27,9 +27,9 @@ public class UserTable {
 			rowsAffected = statement.executeUpdate();
 		} catch (SQLIntegrityConstraintViolationException e) {
 			String errorMessage = e.getMessage();
-			if(errorMessage.contains("users.PRIMARY")) throw new Exception("userName already exists");
-			else if(errorMessage.contains("user.email")) throw new Exception("email already exists");
-			else throw new Exception("mobile number Already exists");
+			if(errorMessage.contains("users.PRIMARY")) throw new Assets.UserNameAlreadyExistsException();
+			else if(errorMessage.contains("users.email")) throw new Assets.EmailAlreadyExistsException();
+			else if(errorMessage.contains("users.mobile")) throw new Assets.MobileNumberAlreadyExistsException();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally {
@@ -56,6 +56,27 @@ public class UserTable {
 			Assets.closeResultSet(result);
 			Assets.closeStatement(statement);
 		}
-		throw new Exception("UserName Does not exists");
+		throw new Assets.NoUserFoundException();
+	}
+	
+//	returns
+//		userName if exists else throw Exception
+	public static String findUserNameWithEMail(String email) throws Exception{
+		ResultSet result = null;
+		PreparedStatement statement  = null;
+		String userName = null;
+		try {
+			statement = Assets.connection.prepareStatement("SELECT userName FROM users WHERE email = ?");
+			statement.setString(1, email);
+			result = statement.executeQuery();
+			if(result.next()) userName = result.getString("userName");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			Assets.closeResultSet(result);
+			Assets.closeStatement(statement);
+		}
+		if(userName != null) return userName;
+		throw new Assets.NoUserFoundException();
 	}
 }
