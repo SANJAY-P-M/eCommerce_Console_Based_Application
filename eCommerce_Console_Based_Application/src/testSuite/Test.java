@@ -50,6 +50,12 @@ public class Test {
 		
 //		Order
 //		System.out.println(OrderTable.getOrders(new Customer("SANJAY MURUGESAN","123","mail@mail.com","9876543210")));
+		
+		OrderTable.insertOrder(
+				new Customer("sanj0","SANJAY MURUGESAN","123","mi@mail.com","7894561230"),
+				ProductTable.getProduct("lap201"),
+				1
+		);
 	}
 
 }

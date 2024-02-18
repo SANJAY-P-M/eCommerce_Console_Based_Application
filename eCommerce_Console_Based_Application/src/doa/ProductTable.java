@@ -9,6 +9,7 @@ import java.util.List;
 
 import eCommerce_Console_Based_Application.Assets;
 import eCommerce_Console_Based_Application.Assets.NoSuchProductException;
+import eCommerce_Console_Based_Application.Assets.StockNotAvailable;
 import roles.Product;
 
 public class ProductTable {
@@ -99,36 +100,37 @@ public class ProductTable {
 	
 //	returns
 //		true  if product is available in given quantity 
-//		else false;
-//		throw Exception when there is no product with product Id
-	public static boolean isProductAvailable(String productId,int quantity) throws NoSuchProductException{
+//		else throw Exception when there is no product with product Id
+	public static boolean isProductAvailable(Product product,int quantity) throws StockNotAvailable{
 		ResultSet result = null;
 		PreparedStatement statement = null;
 		int availableQuantity = -1;
 		try {
 			statement = Assets.connection.prepareStatement("SELECT availableQuantity FROM PRODUCTS WHERE productId = ?");
-			statement.setString(1, productId);
+			statement.setString(1, product.getId());
 			result = statement.executeQuery();
 			if(result.next()) availableQuantity = result.getInt("availableQuantity");
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			Assets.closeResultSet(result);
 			Assets.closeStatement(statement);
 		}
-		if(availableQuantity == -1) throw new Assets.NoSuchProductException(productId);
-		return (availableQuantity >= quantity);
+		if (availableQuantity >= quantity) return true;
+		throw new Assets.StockNotAvailable(product.getId(), availableQuantity);
 	}
 
-	public static void reduceQuantity(String productId, int quantity) throws NoSuchProductException {
+	public static void reduceQuantity(Product product, int quantity){
 		PreparedStatement statement = null;
 		try {
-			statement = Assets.connection.prepareStatement("UPDATE TABLE PRODUCTS WHERE productId = ? SET availableQuantity = ?");
-			statement.setString(1, productId);
-			Product product = getProduct(productId);
-			statement.setInt(2, product.getQuantity()-quantity);
+			statement = Assets.connection.prepareStatement("UPDATE PRODUCTS SET availableQuantity = ? WHERE productId = ? ");
+			Product temp = getProduct(product.getId());
+			statement.setInt(1, temp.getQuantity()-quantity);
+			statement.setString(2, product.getId());
 			statement.executeUpdate();
 		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (NoSuchProductException e) {
 			e.printStackTrace();
 		}finally {
 			Assets.closeStatement(statement);

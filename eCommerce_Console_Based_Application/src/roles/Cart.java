@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Cart {
+	private String userName;
 	private List<Product> products;
 	private int netAmount;
 	
@@ -31,6 +32,14 @@ public class Cart {
 	}
 	public void setProducts(List<Product> products) {
 		this.products = products;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 	
 }

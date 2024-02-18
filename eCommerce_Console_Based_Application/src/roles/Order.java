@@ -1,23 +1,31 @@
 package roles;
 
-import java.sql.Date;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.sql.Timestamp;
 import java.util.List;
 
 public class Order{
 	
-	private String orderId;
+	private int orderId;
+	private String userName;
 	private List<Product> products;
-	private String date;
+	private Timestamp date;
 	private String status;
 	private int totalAmount;
-	public Order(List<Product> list,LocalDateTime localDateTime) {
-		setDate(localDateTime);
+	public Order(List<Product> list,Timestamp date) {
+		setDate(date);
 		setProduct(list);
 		setTotalAmount(calculateTotalAmount());
 	}
 	
+	public Order(int orderId, String userName, Timestamp orderDate, int totalAmount , String status, List<Product> products) {
+		setDate(orderDate);
+		setUserName(userName);
+		setOrderId(orderId);
+		setProduct(products);
+		setStatus(status);
+		setTotalAmount(totalAmount);
+	}
+
 	private int calculateTotalAmount() {
 		int netAmount = 0;
 		for(Product i:products)
@@ -25,10 +33,10 @@ public class Order{
 		return netAmount;
 	}
 
-	public String getOrderId() {
+	public int getOrderId() {
 		return orderId;
 	}
-	public void setOrderId(String orderId) {
+	public void setOrderId(int orderId) {
 		this.orderId = orderId;
 	}
 	public List<Product> getProduct() {
@@ -37,16 +45,13 @@ public class Order{
 	public void setProduct(List<Product> product) {
 		this.products = product;
 	}
-	public boolean equals(String orderId) {
-		return this.orderId.equals(orderId);
-	}
 
-	public String getDate() {
+	public Timestamp getDate() {
 		return date;
 	}
 
-	public void setDate(LocalDateTime date) {
-		this.date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss"));
+	public void setDate(Timestamp date) {
+		this.date = date;
 	}
 
 	public String getStatus() {
@@ -74,5 +79,13 @@ public class Order{
 			sb.append(product.toString()).append("\n");
 		}
 		return sb.toString();
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 }
