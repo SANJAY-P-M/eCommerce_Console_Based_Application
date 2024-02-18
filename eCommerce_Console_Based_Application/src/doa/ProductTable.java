@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,28 +17,25 @@ public class ProductTable {
 	
 //	returns 
 //	true when product added successfully
-//	false when product already exists
-	public static boolean addProduct(Product product) throws Exception {
+	public static void addProduct(Product product){
 		PreparedStatement statement = null;
-		int noOfRowsUpdated = 0;
+		ResultSet result = null;
 		try {
-			statement =  Assets.connection.prepareStatement("INSERT INTO PRODUCTS VALUES ( ? , ? , ? , ? , ? , ? )");
-			statement.setString(1, product.getId());
-			statement.setString(2, product.getName());
-			statement.setString(3, product.getDescription());
-			statement.setDouble(4, product.getPrice());
-			statement.setDouble(5, product.getReview());
-			statement.setInt(6, product.getAvailableQuantity());
-			noOfRowsUpdated = statement.executeUpdate();
-		} catch (SQLIntegrityConstraintViolationException duplicate) {
-			throw new Exception("Product id already exists");
-		}
-		catch (SQLException e) {
+			statement =  Assets.connection.prepareStatement("INSERT INTO PRODUCTS ( productName , productDescription , price ,review,availableQuantity ) VALUES ( ? , ? , ? , ? , ?)",Statement.RETURN_GENERATED_KEYS);
+			statement.setString(1, product.getName());
+			statement.setString(2, product.getDescription());
+			statement.setDouble(3, product.getPrice());
+			statement.setDouble(4, product.getReview());
+			statement.setInt(5, product.getAvailableQuantity());
+			statement.executeUpdate();
+			result = statement.getGeneratedKeys();
+			if(result.next()) product.setId(result.getInt(1));
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally {
-			Assets.closeStatement(statement);			
+			Assets.closeStatement(statement);	
+			Assets.closeResultSet(result);
 		}
-		return noOfRowsUpdated == 1;
 	}
 	
 //	returns
@@ -52,7 +50,7 @@ public class ProductTable {
 			while(result.next()) {
 				list.add(
 					new Product(
-						result.getString(1), 
+						result.getInt(1), 
 						result.getString(2), 
 						result.getString(3), 
 						result.getDouble(4), 
@@ -73,16 +71,16 @@ public class ProductTable {
 //	returns
 //		Product object with matching productId
 //		if no product found throw Exception
-	public static Product getProduct(String productId) throws NoSuchProductException {
+	public static Product getProduct(int productId) throws NoSuchProductException {
 		ResultSet result = null;
 		PreparedStatement statement = null;
 		try {
 			statement = Assets.connection.prepareStatement("SELECT * FROM PRODUCTS WHERE PRODUCTID = ?");
-			statement.setString(1, productId);
+			statement.setInt(1, productId);
 			result = statement.executeQuery();
 			if(result.next()) 
 				return new Product(
-					result.getString(1),
+					result.getInt(1),
 					result.getString(2),
 					result.getString(3),
 					result.getDouble(4),
@@ -95,7 +93,7 @@ public class ProductTable {
 			Assets.closeResultSet(result);
 			Assets.closeStatement(statement);
 		}
-		throw new Assets.NoSuchProductException(productId);
+		throw new Assets.NoSuchProductException(String.valueOf(productId));
 	}
 	
 //	returns
@@ -107,7 +105,7 @@ public class ProductTable {
 		int availableQuantity = -1;
 		try {
 			statement = Assets.connection.prepareStatement("SELECT availableQuantity FROM PRODUCTS WHERE productId = ?");
-			statement.setString(1, product.getId());
+			statement.setInt(1, product.getId());
 			result = statement.executeQuery();
 			if(result.next()) availableQuantity = result.getInt("availableQuantity");
 		} catch (SQLException e) {
@@ -117,7 +115,7 @@ public class ProductTable {
 			Assets.closeStatement(statement);
 		}
 		if (availableQuantity >= quantity) return true;
-		throw new Assets.StockNotAvailable(product.getId(), availableQuantity);
+		throw new Assets.StockNotAvailable(String.valueOf(product.getId()), availableQuantity);
 	}
 
 	public static void reduceQuantity(Product product, int quantity){
@@ -126,7 +124,7 @@ public class ProductTable {
 			statement = Assets.connection.prepareStatement("UPDATE PRODUCTS SET availableQuantity = ? WHERE productId = ? ");
 			Product temp = getProduct(product.getId());
 			statement.setInt(1, temp.getAvailableQuantity()-quantity);
-			statement.setString(2, product.getId());
+			statement.setInt(2, product.getId());
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();

@@ -17,8 +17,8 @@ public class CartTable {
 		PreparedStatement statement = null;
 		try {
 			statement = Assets.connection.prepareStatement("INSERT INTO Cart VALUES ( ? , ? , ? )");
-			statement.setString(1, customer.getUserName());
-			statement.setString(2, product.getId());
+			statement.setInt(1, customer.getUserId());
+			statement.setInt(2, product.getId());
 			statement.setInt(3, quantity);
 			statement.executeUpdate();
 		} catch (SQLException e) {
@@ -29,17 +29,17 @@ public class CartTable {
 	}
 	
 	
-	public static Cart getCart(Customer customer) {
+	public static Cart getCart(int userId) {
 		PreparedStatement statement = null;
 		ResultSet result;
 		HashMap<Product,Integer> productAndQuantityMap = new HashMap<>();
 		try {
-			statement = Assets.connection.prepareStatement("SELECT * FROM Cart WHERE userName = ?");
-			statement.setString(1, customer.getUserName());
+			statement = Assets.connection.prepareStatement("SELECT * FROM Carts WHERE userId = ?");
+			statement.setInt(1, userId);
 			result = statement.executeQuery();
 			while(result.next()) {
 				productAndQuantityMap.put(
-						ProductTable.getProduct(result.getString("productId")),
+						ProductTable.getProduct(result.getInt("productId")),
 						result.getInt("quantity")
 					);
 			}
@@ -48,6 +48,6 @@ public class CartTable {
 		} catch (NoSuchProductException e) {
 			e.printStackTrace();
 		}
-		return new Cart(customer.getUserName(),productAndQuantityMap);
+		return new Cart(userId,productAndQuantityMap);
 	}
 }

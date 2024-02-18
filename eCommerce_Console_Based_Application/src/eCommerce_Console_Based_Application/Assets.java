@@ -7,6 +7,11 @@ import java.sql.Statement;
 import java.util.Scanner;
 public class Assets {
 	
+	public static class NoSuchEmailException extends Exception {
+		public NoSuchEmailException() {
+			super("This mail does not exxists");
+		}
+	}
 	public static class StockNotAvailable extends Exception {
 		public StockNotAvailable(String productId,int availableQuantity) {
 			super(availableQuantity+" stock only availabe in productId "+productId);
@@ -17,16 +22,6 @@ public class Assets {
 			super("product not found with productId : "+productId);
 		}
 	}
-	public static class NoUserFoundException extends Exception {
-		public NoUserFoundException() {
-			super("No user found");
-		}	
-	};
-	public static class UserNameAlreadyExistsException extends Exception {
-		public UserNameAlreadyExistsException() {
-			super("User Name already exists try different user Name");
-		}
-	};
 	public static class EmailAlreadyExistsException extends Exception {
 		public EmailAlreadyExistsException() {
 			super("E mail already exists");

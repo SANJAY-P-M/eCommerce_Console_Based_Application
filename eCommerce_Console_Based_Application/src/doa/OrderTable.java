@@ -24,8 +24,8 @@ public class OrderTable {
 		PreparedStatement statement = null;
 		try {
 			double totalAmount = product.getPrice() * quantity;
-			statement = Assets.connection.prepareStatement("INSERT INTO ORDERS ( userName , totalAmount ) VALUES ( ? , ? )",Statement.RETURN_GENERATED_KEYS);
-			statement.setString(1, customer.getUserName());
+			statement = Assets.connection.prepareStatement("INSERT INTO ORDERS ( userId , totalAmount ) VALUES ( ? , ? )",Statement.RETURN_GENERATED_KEYS);
+			statement.setInt(1, customer.getUserId());
 			statement.setDouble(2, totalAmount);
 			statement.executeUpdate();
 			result = statement.getGeneratedKeys();
@@ -47,8 +47,8 @@ public class OrderTable {
 		PreparedStatement statement = null;
 		ResultSet result = null;
 		try {
-			statement = Assets.connection.prepareStatement("INSERT INTO ORDERS ( userName , totalAmount ) VALUES ( ? , ? )",Statement.RETURN_GENERATED_KEYS);
-			statement.setString(1, cart.getUserName());
+			statement = Assets.connection.prepareStatement("INSERT INTO ORDERS ( userId , totalAmount ) VALUES ( ? , ? )",Statement.RETURN_GENERATED_KEYS);
+			statement.setInt(1, cart.getUserId());
 			statement.setDouble(2, cart.getNetAmount());
 			statement.executeUpdate();
 			result = statement.getGeneratedKeys();
@@ -122,20 +122,20 @@ public class OrderTable {
 //	
 
 
-	public static List<Order> getOrders(Customer customer){
+	public static List<Order> getOrders(int userId){
 		ResultSet result = null;
 		PreparedStatement statement = null;
 		List<Order> orderList = new ArrayList<>();
 		try {
-			String sql = "SELECT * FROM orders WHERE userName = ?";
+			String sql = "SELECT * FROM orders WHERE userId = ?";
 			statement = Assets.connection.prepareStatement(sql);
-			statement.setString(1, customer.getUserName());
+			statement.setInt(1, userId);
 			result = statement.executeQuery();
 			while(result.next()) {
 				orderList.add(
 							new Order(
 									result.getInt("orderId"),
-									result.getString("userName"),
+									result.getInt("userId"),
 									result.getTimestamp("orderDate"),
 									result.getInt("totalAmount"),
 									result.getString("status"),

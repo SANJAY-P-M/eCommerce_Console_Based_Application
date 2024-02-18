@@ -1,14 +1,14 @@
 package roles;
 
 public class Product {
-	private String id;
+	private int id;
 	private String name;
 	private String description;
 	private double price;
 	private double review;
 	private int availableQuantity;
 	
-	public Product(String id,String name,String description,double price,double review,int availableQuantity){
+	public Product(int id,String name,String description,double price,double review,int availableQuantity){
 		setId(id);
 		setName(name);
 		setDescription(description);
@@ -17,10 +17,18 @@ public class Product {
 		setReview(review);
 	}
 	
-	public String getId() {
+	public Product(String name,String description,double price,double review,int availableQuantity) {
+		setAvailableQuantity(availableQuantity);
+		setDescription(description);
+		setName(name);
+		setPrice(price);
+		setReview(review);
+	}
+	
+	public int getId() {
 		return id;
 	}
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 	public String getName() {

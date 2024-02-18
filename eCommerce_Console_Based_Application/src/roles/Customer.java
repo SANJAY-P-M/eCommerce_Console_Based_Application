@@ -2,40 +2,42 @@ package roles;
 
 import java.util.List;
 
+import doa.CartTable;
+import doa.OrderTable;
+
 public class Customer{
-	private String userName;
+	private int userId;
 	private String fullName;
-	private String password;
 	private String email;
+	private String password;
 	private String mobileNumber;
 	private List<Order> orders;
 	private Cart cart;
 	
-	public Customer(String userName ,String fullName,String password,String email,String mobileNumber) {
-		setUserName(userName);
+	public Customer(String fullName,String email,String mobileNumber, String password) {
 		setFullName(fullName);
-		setPassword(password);
 		setEmail(email);
 		setMobileNumber(mobileNumber);
+		setPassword(password);
 	}
 	
-	public void setUserName(String userName) {
-		this.userName = userName;
+	public Customer(int userId,String fullName,String email,String mobileNumber,String password,List<Order> orders,Cart cart) {
+		setUserId(userId);
+		setEmail(email);
+		setFullName(fullName);
+		setMobileNumber(mobileNumber);
+		setOrders(orders);
+		setPassword(password);
+		setCart(cart);
 	}
 	
-	public String getUserName() {
-		return this.userName;
+	public void setUserId(int userName) {
+		this.userId = userName;
 	}
 	
-	public String getPassword() {
-		return password;
+	public int getUserId() {
+		return this.userId;
 	}
-
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
 
 	public String getEmail() {
 		return email;
@@ -84,13 +86,21 @@ public class Customer{
 	 @Override
     public String toString() {
         return "User{" +
-                "userName='" + userName + '\'' +
+                "userName='" + userId + '\'' +
                 ", fullName='" + fullName + '\'' +
-                ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
                 ", mobileNumber='" + mobileNumber + '\'' +
                 ", orders=" + orders +
+                ",cart = "+ cart +
                 '}';
     }
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
 
 }

@@ -3,13 +3,13 @@ package roles;
 import java.util.Map;
 
 public class Cart {
-	private String userName;
+	private int userId;
 	private Map<Product,Integer> productAndQuantity;
 	private int netAmount;
 	
-	public Cart(String userName,Map<Product,Integer> productAndQuantity) {
-		setUserName(userName);
+	public Cart(int userId,Map<Product,Integer> productAndQuantity) {
 		setProductsAndQuantity(productAndQuantity);
+		setUserId(userId);
 	}
 	
 	
@@ -20,20 +20,22 @@ public class Cart {
 		this.netAmount = netAmount;
 	}
 
-	public String getUserName() {
-		return userName;
-	}
-
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
-
 	public Map<Product,Integer> getProductsAndQuantity() {
 		return productAndQuantity;
 	}
 
 	public void setProductsAndQuantity(Map<Product,Integer> productsAndQuantity) {
 		this.productAndQuantity = productsAndQuantity;
+	}
+
+
+	public int getUserId() {
+		return userId;
+	}
+
+
+	public void setUserId(int userId) {
+		this.userId = userId;
 	}
 	
 }

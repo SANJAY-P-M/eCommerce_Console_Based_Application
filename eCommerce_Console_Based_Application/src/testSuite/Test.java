@@ -18,7 +18,7 @@ public class Test {
 		Assets.createConnection();
 		
 //		ProductTable.addProduct()
-//		ProductTable.addProduct(new Product("lap21","asus laptop","best laptop under 1000",1000.0,5.6,10));
+//		ProductTable.addProduct(new Product("asus laptop","best laptop under 1000",1000.0,5.6,10));
 		
 //		ProductTable.getProductsList();
 //		System.out.println(ProductTable.getAllProducts());
@@ -26,14 +26,12 @@ public class Test {
 //		System.out.print(Assets.noUserFound.equals(Assets.noUserFound));
 		
 //		ProductTable.getProduct()
-//		System.out.println(ProductTable.getProduct("la101"));
+//		System.out.println(ProductTable.getProduct(2));
 		
 //		UserTable.insertNewUser()
 //		try {
-//			Customer customer = new Customer("sanj0","SANJAY MURUGESAN","123","mi@mail.com","7894561230");
-//			System.out.println(UserTable.insertNewUser(customer));			
-//		}catch (Assets.UserNameAlreadyExistsException e) {
-//			System.out.println("oki");
+//			Customer customer = new Customer("SANJAY MURUGESAN","mail@mail.com","9876543210","123");
+//			UserTable.insertNewUser(customer);		
 //		}catch (Assets.MobileNumberAlreadyExistsException e) {
 //			 System.out.println("mobile already exists");
 //		}
@@ -42,20 +40,24 @@ public class Test {
 //		}
 		
 //		UserTable.getPassword()
-//		try {
-//			System.out.println(UserTable.getPassword("san"));			
-//		}catch (Assets.NoUserFoundException e) {
-//			 System.out.println("no User found");
-//		}
+//		System.out.println(UserTable.getPassword("mail@mail.com"));
+		
+//		System.out.print(UserTable.getUserWithEMail("mail@mail.com"));
 		
 //		Order
 //		System.out.println(OrderTable.getOrders(new Customer("SANJAY MURUGESAN","123","mail@mail.com","9876543210")));
 		
-		OrderTable.insertOrder(
-				new Customer("sanj0","SANJAY MURUGESAN","123","mi@mail.com","7894561230"),
-				ProductTable.getProduct("lap201"),
-				1
-		);
+//		OrderTable.insertOrder(
+//				new Customer("sanj0","SANJAY MURUGESAN","123","mi@mail.com","7894561230"),
+//				ProductTable.getProduct("lap201"),
+//				1
+//		);
+		
+//		product available
+//		System.out.println(ProductTable.isProductAvailable(ProductTable.getProduct(2), 23));
+		
+//		reduce quantity
+		ProductTable.reduceQuantity(ProductTable.getProduct(2), 20);
 	}
 
 }
