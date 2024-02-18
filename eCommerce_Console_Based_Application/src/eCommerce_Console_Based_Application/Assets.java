@@ -24,7 +24,7 @@ public class Assets {
 	};
 	public static class UserNameAlreadyExistsException extends Exception {
 		public UserNameAlreadyExistsException() {
-			super("User already exists");
+			super("User Name already exists try different user Name");
 		}
 	};
 	public static class EmailAlreadyExistsException extends Exception {

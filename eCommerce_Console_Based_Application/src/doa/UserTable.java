@@ -6,6 +6,9 @@ import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 
 import eCommerce_Console_Based_Application.Assets;
+import eCommerce_Console_Based_Application.Assets.EmailAlreadyExistsException;
+import eCommerce_Console_Based_Application.Assets.MobileNumberAlreadyExistsException;
+import eCommerce_Console_Based_Application.Assets.UserNameAlreadyExistsException;
 import roles.Customer;
 public class UserTable {
 	
@@ -13,7 +16,7 @@ public class UserTable {
 //		true for success insert of data
 //		false if not inserted
 //		throws Exception when userName (or) e-mail (or) mobile number already exists
-	public static boolean insertNewUser(Customer customer) throws Exception{
+	public static boolean insertNewUser(Customer customer) throws UserNameAlreadyExistsException, EmailAlreadyExistsException, MobileNumberAlreadyExistsException{
 		PreparedStatement statement = null;
 		int rowsAffected = 0;
 		try {
