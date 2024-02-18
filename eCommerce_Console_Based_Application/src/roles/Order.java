@@ -1,36 +1,42 @@
 package roles;
 
 import java.sql.Timestamp;
-import java.util.List;
+import java.util.Map;
 
 public class Order{
 	
 	private int orderId;
 	private String userName;
-	private List<Product> products;
+	private Map<Product,Integer> productAndQuantity;
 	private Timestamp date;
 	private String status;
 	private int totalAmount;
-	public Order(List<Product> list,Timestamp date) {
-		setDate(date);
-		setProduct(list);
-		setTotalAmount(calculateTotalAmount());
-	}
 	
-	public Order(int orderId, String userName, Timestamp orderDate, int totalAmount , String status, List<Product> products) {
+	public Order(int orderId, String userName, Timestamp orderDate , String status, Map<Product,Integer> productAndQuantity) {
 		setDate(orderDate);
 		setUserName(userName);
 		setOrderId(orderId);
-		setProduct(products);
+		setStatus(status);
+		setTotalAmount(calculateTotalAmount());
+		setProductAndQuantity(productAndQuantity);
+	}
+
+	public Order(int orderId, String userName, Timestamp orderDate, int totalAmount, String status,
+			Map<Product, Integer> allProducts) {
+		setDate(orderDate);
+		setOrderId(orderId);
+		setProductAndQuantity(allProducts);
 		setStatus(status);
 		setTotalAmount(totalAmount);
+		setUserName(userName);
 	}
 
 	private int calculateTotalAmount() {
-		int netAmount = 0;
-		for(Product i:products)
-			netAmount += i.getPrice() * i.getQuantity();
-		return netAmount;
+		int totalAmount = 0;
+		for(Map.Entry<Product,Integer> i:productAndQuantity.entrySet()) {
+			totalAmount += i.getKey().getPrice() * i.getValue();
+		}
+		return totalAmount;
 	}
 
 	public int getOrderId() {
@@ -38,12 +44,6 @@ public class Order{
 	}
 	public void setOrderId(int orderId) {
 		this.orderId = orderId;
-	}
-	public List<Product> getProduct() {
-		return products;
-	}
-	public void setProduct(List<Product> product) {
-		this.products = product;
 	}
 
 	public Timestamp getDate() {
@@ -70,17 +70,6 @@ public class Order{
 		this.totalAmount = totalAmount;
 	}
 
-	
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("Order ID: ").append(this.orderId).append("\n");
-		for (Product product : products) {
-			sb.append(product.toString()).append("\n");
-		}
-		return sb.toString();
-	}
-
 	public String getUserName() {
 		return userName;
 	}
@@ -88,4 +77,13 @@ public class Order{
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
+
+	public Map<Product,Integer> getProductAndQuantity() {
+		return productAndQuantity;
+	}
+
+	public void setProductAndQuantity(Map<Product,Integer> productAndQuantity) {
+		this.productAndQuantity = productAndQuantity;
+	}
+	
 }

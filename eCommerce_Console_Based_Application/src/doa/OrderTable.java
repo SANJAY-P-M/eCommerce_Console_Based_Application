@@ -1,19 +1,14 @@
 package doa;
 
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Map;
 
 import eCommerce_Console_Based_Application.Assets;
-import eCommerce_Console_Based_Application.Assets.NoSuchProductException;
 import eCommerce_Console_Based_Application.Assets.StockNotAvailable;
 import roles.Cart;
 import roles.Customer;
@@ -45,9 +40,9 @@ public class OrderTable {
 	}
 	
 	public static void insertOrder(Customer customer,Cart cart) throws StockNotAvailable {
-		List<Product> cartProduct = cart.getProducts();
-		for(Product i:cartProduct)
-			if(!ProductTable.isProductAvailable(i, i.getQuantity()))
+		Map<Product,Integer> cartProduct = cart.getProductsAndQuantity();
+		for(Map.Entry<Product, Integer> i:cartProduct.entrySet())
+			if(!ProductTable.isProductAvailable(i.getKey(), i.getValue()))
 				return;
 		PreparedStatement statement = null;
 		ResultSet result = null;
@@ -59,7 +54,7 @@ public class OrderTable {
 			result = statement.getGeneratedKeys();
 			result.next();
 			int orderId = result.getInt(1);
-			OrderItems.insert(orderId, cart.getProducts());
+			OrderItems.insert(orderId, cart.getProductsAndQuantity());
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

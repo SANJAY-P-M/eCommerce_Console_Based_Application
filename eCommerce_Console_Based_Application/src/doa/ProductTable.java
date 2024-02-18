@@ -27,7 +27,7 @@ public class ProductTable {
 			statement.setString(3, product.getDescription());
 			statement.setDouble(4, product.getPrice());
 			statement.setDouble(5, product.getReview());
-			statement.setInt(6, product.getQuantity());
+			statement.setInt(6, product.getAvailableQuantity());
 			noOfRowsUpdated = statement.executeUpdate();
 		} catch (SQLIntegrityConstraintViolationException duplicate) {
 			throw new Exception("Product id already exists");
@@ -125,7 +125,7 @@ public class ProductTable {
 		try {
 			statement = Assets.connection.prepareStatement("UPDATE PRODUCTS SET availableQuantity = ? WHERE productId = ? ");
 			Product temp = getProduct(product.getId());
-			statement.setInt(1, temp.getQuantity()-quantity);
+			statement.setInt(1, temp.getAvailableQuantity()-quantity);
 			statement.setString(2, product.getId());
 			statement.executeUpdate();
 		} catch (SQLException e) {

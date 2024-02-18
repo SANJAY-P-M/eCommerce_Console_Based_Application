@@ -6,13 +6,13 @@ public class Product {
 	private String description;
 	private double price;
 	private double review;
-	private int quantity;
+	private int availableQuantity;
 	
 	public Product(String id,String name,String description,double price,double review,int availableQuantity){
 		setId(id);
 		setName(name);
 		setDescription(description);
-		setQuantity(availableQuantity);
+		setAvailableQuantity(availableQuantity);
 		setPrice(price);
 		setReview(review);
 	}
@@ -56,15 +56,15 @@ public class Product {
 	                ", description='" + description + '\'' +
 	                ", price=" + price +
 	                ", review=" + review +
-	                ", quantity=" + quantity +
+	                ", availableQuantity=" + availableQuantity +
 	                "}\n";
 	}
 
-	public int getQuantity() {
-		return quantity;
+	public int getAvailableQuantity() {
+		return availableQuantity;
 	}
 
-	public void setQuantity(int quantity) {
-		this.quantity = quantity;
+	public void setAvailableQuantity(int quantity) {
+		this.availableQuantity = quantity;
 	}
 }

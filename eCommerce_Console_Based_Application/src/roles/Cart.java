@@ -1,37 +1,23 @@
 package roles;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 
 public class Cart {
 	private String userName;
-	private List<Product> products;
+	private Map<Product,Integer> productAndQuantity;
 	private int netAmount;
 	
-	public Cart() {
-		setProducts(new ArrayList<>());
-		setNetAmount(0);
+	public Cart(String userName,Map<Product,Integer> productAndQuantity) {
+		setUserName(userName);
+		setProductsAndQuantity(productAndQuantity);
 	}
 	
-	public Cart(List<Product> products) {
-		setProducts(products);
-		int netAmount = 0;
-		for(Product i:products)
-			netAmount += i.getPrice() * i.getQuantity();
-		setNetAmount(netAmount);
-	}
 	
 	public int getNetAmount() {
 		return netAmount;
 	}
 	public void setNetAmount(int netAmount) {
 		this.netAmount = netAmount;
-	}
-	public List<Product> getProducts() {
-		return products;
-	}
-	public void setProducts(List<Product> products) {
-		this.products = products;
 	}
 
 	public String getUserName() {
@@ -40,6 +26,14 @@ public class Cart {
 
 	public void setUserName(String userName) {
 		this.userName = userName;
+	}
+
+	public Map<Product,Integer> getProductsAndQuantity() {
+		return productAndQuantity;
+	}
+
+	public void setProductsAndQuantity(Map<Product,Integer> productsAndQuantity) {
+		this.productAndQuantity = productsAndQuantity;
 	}
 	
 }
