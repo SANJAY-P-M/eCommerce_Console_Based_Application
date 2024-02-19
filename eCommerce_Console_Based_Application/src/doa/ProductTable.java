@@ -3,25 +3,24 @@ package doa;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import doaException.NoSuchProductException;
+import doaException.StockNotAvailable;
 import eCommerce_Console_Based_Application.Assets;
-import eCommerce_Console_Based_Application.Assets.NoSuchProductException;
-import eCommerce_Console_Based_Application.Assets.StockNotAvailable;
 import roles.Product;
 
 public class ProductTable {
 	
 //	returns 
 //	true when product added successfully
-	public static void addProduct(Product product){
+	public static boolean insertProduct(Product product){
 		PreparedStatement statement = null;
 		ResultSet result = null;
 		try {
-			statement =  Assets.connection.prepareStatement("INSERT INTO PRODUCTS ( productName , productDescription , price ,review,availableQuantity ) VALUES ( ? , ? , ? , ? , ?)",Statement.RETURN_GENERATED_KEYS);
+			statement =  Connector.getInstance().getConnection().prepareStatement("INSERT INTO PRODUCTS ( productName , productDescription , price ,review,availableQuantity ) VALUES ( ? , ? , ? , ? , ?)",Statement.RETURN_GENERATED_KEYS);
 			statement.setString(1, product.getName());
 			statement.setString(2, product.getDescription());
 			statement.setDouble(3, product.getPrice());
@@ -30,8 +29,10 @@ public class ProductTable {
 			statement.executeUpdate();
 			result = statement.getGeneratedKeys();
 			if(result.next()) product.setId(result.getInt(1));
+			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
+			return false;
 		}finally {
 			Assets.closeStatement(statement);	
 			Assets.closeResultSet(result);
@@ -45,7 +46,7 @@ public class ProductTable {
 		ResultSet result = null;
 		PreparedStatement statement = null;
 		try {
-			statement = Assets.connection.prepareStatement("SELECT * FROM PRODUCTS");			
+			statement = Connector.getInstance().getConnection().prepareStatement("SELECT * FROM PRODUCTS");			
 			result = statement.executeQuery();
 			while(result.next()) {
 				list.add(
@@ -75,7 +76,7 @@ public class ProductTable {
 		ResultSet result = null;
 		PreparedStatement statement = null;
 		try {
-			statement = Assets.connection.prepareStatement("SELECT * FROM PRODUCTS WHERE PRODUCTID = ?");
+			statement = Connector.getInstance().getConnection().prepareStatement("SELECT * FROM PRODUCTS WHERE PRODUCTID = ?");
 			statement.setInt(1, productId);
 			result = statement.executeQuery();
 			if(result.next()) 
@@ -93,7 +94,7 @@ public class ProductTable {
 			Assets.closeResultSet(result);
 			Assets.closeStatement(statement);
 		}
-		throw new Assets.NoSuchProductException(String.valueOf(productId));
+		throw new NoSuchProductException(String.valueOf(productId));
 	}
 	
 //	returns
@@ -104,7 +105,7 @@ public class ProductTable {
 		PreparedStatement statement = null;
 		int availableQuantity = -1;
 		try {
-			statement = Assets.connection.prepareStatement("SELECT availableQuantity FROM PRODUCTS WHERE productId = ?");
+			statement = Connector.getInstance().getConnection().prepareStatement("SELECT availableQuantity FROM PRODUCTS WHERE productId = ?");
 			statement.setInt(1, product.getId());
 			result = statement.executeQuery();
 			if(result.next()) availableQuantity = result.getInt("availableQuantity");
@@ -115,13 +116,13 @@ public class ProductTable {
 			Assets.closeStatement(statement);
 		}
 		if (availableQuantity >= quantity) return true;
-		throw new Assets.StockNotAvailable(String.valueOf(product.getId()), availableQuantity);
+		throw new StockNotAvailable(String.valueOf(product.getId()), availableQuantity);
 	}
 
 	public static void reduceQuantity(Product product, int quantity){
 		PreparedStatement statement = null;
 		try {
-			statement = Assets.connection.prepareStatement("UPDATE PRODUCTS SET availableQuantity = ? WHERE productId = ? ");
+			statement = Connector.getInstance().getConnection().prepareStatement("UPDATE PRODUCTS SET availableQuantity = ? WHERE productId = ? ");
 			Product temp = getProduct(product.getId());
 			statement.setInt(1, temp.getAvailableQuantity()-quantity);
 			statement.setInt(2, product.getId());
