@@ -35,22 +35,6 @@ public class OrderItems {
 		return productAndQuantity;
 	}
 
-	public static void insert(int orderId, Product product, int quantity){
-		PreparedStatement statement = null;
-		try {
-			statement = Connector.getInstance().getConnection().prepareStatement("INSERT INTO orderItems VALUES ( ? , ? , ? )");
-			statement.setInt(1, orderId);
-			statement.setInt(2 ,product.getId());
-			statement.setInt(3, quantity);
-			statement.executeUpdate();
-			ProductTable.reduceQuantity(product, quantity);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}finally {
-			Assets.closeStatement(statement);
-		}
-	}
-
 	public static void insert(int orderId, Map<Product,Integer> products) {
 		PreparedStatement statement = null;
 		try {

@@ -11,34 +11,33 @@ import doaException.MobileNumberAlreadyExistsException;
 import doaException.NoSuchEmailException;
 import eCommerce_Console_Based_Application.Assets;
 import roles.User;
+import roles.UserFactory;
 public class UserTable {
 	
 //	returns void
 //		throws Exception when e-mail (or) mobile number already exists
-	public static void insertNewUser(User customer,String role) throws EmailAlreadyExistsException, MobileNumberAlreadyExistsException{
+	public static User insertNewUser(User user,String role){
 		PreparedStatement statement = null;
 		ResultSet result = null;
 		try {
 			String sql = "INSERT INTO users (fullName, mobileNumber, password , email ,role) VALUES ( ? , ? , ?, ? , ? )";
 			statement = Connector.getInstance().getConnection().prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
-			statement.setString(1, customer.getFullName());
-			statement.setString(2, customer.getMobileNumber());
-			statement.setString(3, customer.getPassword());
-			statement.setString(4, customer.getEmail());
+			statement.setString(1, user.getFullName());
+			statement.setString(2, user.getMobileNumber());
+			statement.setString(3, user.getPassword());
+			statement.setString(4, user.getEmail());
 			statement.setString(5, role);
 			statement.executeUpdate();
 			result = statement.getGeneratedKeys();
-			if(result.next()) customer.setUserId(result.getInt(1));
-		} catch (SQLIntegrityConstraintViolationException e) {
-			String errorMessage = e.getMessage();
-			if(errorMessage.contains("users.email")) throw new EmailAlreadyExistsException();
-			else if(errorMessage.contains("users.mobile")) throw new MobileNumberAlreadyExistsException();
+			if(result.next()) user.setUserId(result.getInt(1));
+			return UserFactory.getFactoryInstance().getInstance(user, role);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally {
 			Assets.closeStatement(statement);		
 			Assets.closeResultSet(result);
 		}
+		return null;
 	}
 
 //	returns
@@ -96,7 +95,7 @@ public class UserTable {
 		ResultSet result = null;
 		boolean isFound = false;
 		try {
-			statement = Connector.getInstance().getConnection().prepareStatement("SELECT EXISTS (SELECT 1 FROM users WHERE mobileNumber = ?)");
+			statement = Connector.getInstance().getConnection().prepareStatement("SELECT EXISTS (SELECT 1 FROM users WHERE email = ?)");
 			statement.setString(1, mobileNumber);
 			result = statement.executeQuery();
 			if(result.next()) isFound = result.getInt(1) == 1;

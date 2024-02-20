@@ -100,7 +100,7 @@ public class ProductTable {
 //	returns
 //		true  if product is available in given quantity 
 //		else throw Exception when there is no product with product Id
-	public static boolean isProductAvailable(Product product,int quantity) throws StockNotAvailable{
+	public static boolean isProductAvailable(Product product,int quantity){
 		ResultSet result = null;
 		PreparedStatement statement = null;
 		int availableQuantity = -1;
@@ -115,8 +115,7 @@ public class ProductTable {
 			Assets.closeResultSet(result);
 			Assets.closeStatement(statement);
 		}
-		if (availableQuantity >= quantity) return true;
-		throw new StockNotAvailable(String.valueOf(product.getId()), availableQuantity);
+		return (availableQuantity >= quantity);
 	}
 
 	public static void reduceQuantity(Product product, int quantity){

@@ -1,23 +1,35 @@
 package eCommerce_Console_Based_Application;
 
+import roles.Admin;
 import roles.Customer;
+import roles.Employee;
 import roles.User;
 import services.LoginServices;
 import services.UICards;
 public class Main {
 	public static void main(String[] args) {
-		UICards.printGreeting();
-		UICards.printChoiceList(Assets.signUpPromptList);
-		int choice = Assets.scan.nextInt();
-		Assets.scan.nextLine();
 		User user = null;
 		
-		switch(choice) {
-			case 1:
-				user = LoginServices.createNewUser();
-				break;
-			case 2:
-				user = LoginServices.authenticateUser();
+			while(user == null) {
+				UICards.printGreeting();
+				UICards.printChoiceList(Assets.signUpPromptList);
+				int choice = Assets.scan.nextInt();
+				Assets.scan.nextLine();
+				switch(choice) {
+				case 1:
+					user = LoginServices.createNewCustomer();
+					break;
+				case 2:
+					user = LoginServices.authenticateCustomer();
+					break;			
+			}
+		}
+		if(user instanceof Customer) {
+			
+		} else if( user instanceof Admin) {
+			
+		} else if(user instanceof Employee) {
+			
 		}
 		System.out.println(user);
 	}

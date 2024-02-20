@@ -30,13 +30,13 @@ public class User{
 	
 //	Copy constructor
 	public User(User user) {
-		setUserId(userId);
-		setFullName(fullName);
-		setEmail(email);
-		setMobileNumber(mobileNumber);
-		setPassword(password);
-		setOrders(orders);
-		setCart(cart);
+		setUserId(user.userId);
+		setFullName(user.fullName);
+		setEmail(user.email);
+		setMobileNumber(user.mobileNumber);
+		setPassword(user.password);
+		setOrders(user.orders);
+		setCart(user.cart);
 	}
 	
 	public void setUserId(int userName) {
