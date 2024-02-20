@@ -50,4 +50,16 @@ public class CartTable {
 		}
 		return new Cart(userId,productAndQuantityMap);
 	}
+
+
+	public static void makeEmpty(int userId) {
+		PreparedStatement statement = null;
+		String sql = "DELETE FROM users WHERE userId = ?";
+		try {
+			statement = Connector.getInstance().getConnection().prepareStatement(sql);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 }

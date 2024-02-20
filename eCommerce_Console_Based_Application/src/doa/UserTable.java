@@ -30,7 +30,10 @@ public class UserTable {
 			statement.executeUpdate();
 			result = statement.getGeneratedKeys();
 			if(result.next()) user.setUserId(result.getInt(1));
+			
+//			Factory design Pattern
 			return UserFactory.getFactoryInstance().getInstance(user, role);
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally {
@@ -89,7 +92,7 @@ public class UserTable {
 		}
 		throw new NoSuchEmailException();
 	}
-
+  
 	public static boolean isMailExists(String mobileNumber) {
 		PreparedStatement statement = null;
 		ResultSet result = null;

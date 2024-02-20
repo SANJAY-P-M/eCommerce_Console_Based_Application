@@ -1,5 +1,7 @@
 package roles;
 
+import java.util.Map;
+
 import eCommerce_Console_Based_Application.ECommerceApplication;
 
 public class Customer extends User {
@@ -16,6 +18,17 @@ public class Customer extends User {
 		return ECommerceApplication.makeOrder(this, product, quantity);
 	}
 	
+	public void viewAllProducts() {
+		ECommerceApplication.viewAllProducts();
+	}
+	
+	public void selectProduct(int productId) {
+		ECommerceApplication.selectProduct(productId);
+	}
+	
+	public boolean addToCart(Product product,int quantity) {
+		return ECommerceApplication.addToCart(this,product,quantity);
+	}
 	
 	
 }
