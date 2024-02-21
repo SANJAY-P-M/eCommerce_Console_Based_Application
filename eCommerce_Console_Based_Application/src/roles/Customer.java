@@ -1,10 +1,18 @@
 package roles;
 
+
 import java.util.Map;
 
+import doa.CartTable;
+import doa.OrderTable;
+import doa.ProductTable;
+import doaException.ProductNotSelectedException;
+import doaException.StockNotAvailable;
 import eCommerce_Console_Based_Application.ECommerceApplication;
 
 public class Customer extends User {
+
+	private Product selected;
 	
 	public Customer(User user) {
 		super(user);
@@ -14,21 +22,77 @@ public class Customer extends User {
 		super(fullName, email, mobileNumber, password);
 	}
 	
-	public boolean placeOrder(Product product,int quantity) {
-		return ECommerceApplication.makeOrder(this, product, quantity);
+	public Product getSelected() {
+		return selected;
+	}
+
+	public void setSelected(Product selected) {
+		this.selected = selected;
 	}
 	
-	public void viewAllProducts() {
-		ECommerceApplication.viewAllProducts();
+	public void makeOrder(int quantity) throws StockNotAvailable, ProductNotSelectedException{
+		
+		if(this.selected == null) throw new ProductNotSelectedException();
+		
+//		Check Availability
+		if(!ProductTable.isProductAvailable(this.getSelected(), quantity))
+			throw new StockNotAvailable(getSelected());
+		
+//		Update in table 
+		Order order = OrderTable.insertOrder(this, this.getSelected(), quantity);
+		ProductTable.reduceQuantity(this.getSelected(), quantity);
+		
+//		Update in local instance
+		this.getOrders().add(order);
 	}
 	
-	public void selectProduct(int productId) {
-		ECommerceApplication.selectProduct(productId);
+	public boolean addToCart(int quantity) throws StockNotAvailable, ProductNotSelectedException {
+		
+		if(this.selected == null) throw new ProductNotSelectedException();
+		
+//		Check Availability
+		if(!ProductTable.isProductAvailable(this.getSelected(), quantity))
+			throw new StockNotAvailable(this.getSelected());
+		
+//		Insert in table
+		CartTable.insert(this, this.getSelected(), quantity);
+		
+//		update in object
+		Map<Product,Integer> map = this.getCart().getProductsAndQuantity();
+		map.put(this.getSelected(), map.getOrDefault(this.getSelected(), 0)+quantity);
+		
+		return true;
 	}
 	
-	public boolean addToCart(Product product,int quantity) {
-		return ECommerceApplication.addToCart(this,product,quantity);
+	public boolean checkOutFromCart() throws StockNotAvailable {
+			
+			Cart cart = this.getCart();
+			
+	//		Check Availability
+			Map<Product,Integer> cartProduct = cart.getProductsAndQuantity();
+			for(Map.Entry<Product, Integer> i:cartProduct.entrySet())
+				if(!ProductTable.isProductAvailable(i.getKey(), i.getValue()))
+					throw new StockNotAvailable(i.getKey());
+			
+	//		Insert into Order table
+			Order order = OrderTable.insertOrder(cart);
+			for(Map.Entry<Product, Integer> i:cartProduct.entrySet())
+				ProductTable.reduceQuantity(i.getKey(), i.getValue());
+			CartTable.makeEmpty(cart.getUserId());
+			
+	//		Finally add new Order to user class
+			this.getOrders().add(order);
+			this.setCart(null);
+			
+			return true;
 	}
 	
+	public void removeFromCart(Product product) {
+		
+//		update in table
+		CartTable.remove(getUserId(),product.getId());
+		
+		this.getCart().getProductsAndQuantity().remove(product);
+	}
 	
 }

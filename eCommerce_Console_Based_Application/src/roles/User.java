@@ -2,6 +2,9 @@ package roles;
 
 import java.util.List;
 
+import doa.ProductTable;
+import eCommerce_Console_Based_Application.ECommerceApplication;
+
 public class User{
 	private int userId;
 	private String fullName;
@@ -99,8 +102,6 @@ public class User{
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
-	
 	
 	 @Override
     public String toString() {

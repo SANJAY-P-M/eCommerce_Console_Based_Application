@@ -54,9 +54,24 @@ public class CartTable {
 
 	public static void makeEmpty(int userId) {
 		PreparedStatement statement = null;
-		String sql = "DELETE FROM users WHERE userId = ?";
+		String sql = "DELETE FROM carts WHERE userId = ?";
 		try {
 			statement = Connector.getInstance().getConnection().prepareStatement(sql);
+			statement.setInt(1, userId);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+
+	public static void remove(int userId, int productId) {
+		PreparedStatement statement = null;
+		String sql = "DELETE FROM carts WHERE userId = ? AND productId = ?";
+		try {
+			statement = Connector.getInstance().getConnection().prepareStatement(sql);
+			statement.setInt(1, userId);
+			statement.setInt(2, productId);
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();

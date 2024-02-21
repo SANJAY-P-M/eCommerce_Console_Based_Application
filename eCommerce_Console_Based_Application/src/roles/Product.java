@@ -56,6 +56,14 @@ public class Product {
 		this.review = review;
 	}
 	
+	public int getAvailableQuantity() {
+		return availableQuantity;
+	}
+	
+	public void setAvailableQuantity(int quantity) {
+		this.availableQuantity = quantity;
+	}
+	
 	@Override
 	public String toString() {
 		 return "Product{" +
@@ -67,12 +75,11 @@ public class Product {
 	                ", availableQuantity=" + availableQuantity +
 	                "}\n";
 	}
-
-	public int getAvailableQuantity() {
-		return availableQuantity;
-	}
-
-	public void setAvailableQuantity(int quantity) {
-		this.availableQuantity = quantity;
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(this.getClass() != obj.getClass())
+			return false;
+		else return  id == ((Product) obj).getId();
 	}
 }

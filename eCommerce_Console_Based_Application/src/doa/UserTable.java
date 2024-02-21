@@ -3,20 +3,19 @@ package doa;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
 
-import doaException.EmailAlreadyExistsException;
-import doaException.MobileNumberAlreadyExistsException;
-import doaException.NoSuchEmailException;
 import eCommerce_Console_Based_Application.Assets;
 import roles.User;
 import roles.UserFactory;
 public class UserTable {
 	
-//	returns void
-//		throws Exception when e-mail (or) mobile number already exists
-	public static User insertNewUser(User user,String role){
+/*
+ * returns 
+ * 		User object if user successfully inserted
+ * 		else null	
+ */
+	public static User insert(User user,String role){
 		PreparedStatement statement = null;
 		ResultSet result = null;
 		try {
@@ -43,39 +42,45 @@ public class UserTable {
 		return null;
 	}
 
-//	returns
-//		password for the given e-mail
-//		if e-mail does not exists (or) statement has error throws Exception
-	public static String getPassword(String email ) throws NoSuchEmailException{
+/*
+ * returns 
+ * 		if mail exists password of given e-mail
+ * 		else null
+ */
+	public static String getPassword(String email ){
 		ResultSet result = null;
 		PreparedStatement statement = null;
+		String password = null;
 		try {
 			String sql = "SELECT password FROM USERS WHERE email = ? ";
 			statement =  Connector.getInstance().getConnection().prepareStatement(sql);
 			statement.setString(1, email);
 			result = statement.executeQuery();
-			if(result.next()) return result.getString("password");
+			if(result.next()) password = result.getString("password");
 		}catch (Exception e) {
 			e.printStackTrace();
 		} finally {			
 			Assets.closeResultSet(result);
 			Assets.closeStatement(statement);
 		}
-		throw new NoSuchEmailException();
+		return password;
 	}
 	
-//	returns
-//		userName if exists else throw Exception
-	public static User getUserWithEMail(String email) throws NoSuchEmailException{
+/*
+ * returns User object if exists
+ * 			else null 
+ */
+	public static User getUserWithEMail(String email){
 		ResultSet result = null;
 		PreparedStatement statement  = null;
+		User user = null;
 		try {
 			statement = Connector.getInstance().getConnection().prepareStatement("SELECT * FROM users WHERE email = ?");
 			statement.setString(1, email);
 			result = statement.executeQuery();
 			result.next();
 			int userId = result.getInt("userId");
-			return new User(
+			user =  new User(
 					userId,
 					result.getString("fullName"),
 					email, 
@@ -90,7 +95,7 @@ public class UserTable {
 			Assets.closeResultSet(result);
 			Assets.closeStatement(statement);
 		}
-		throw new NoSuchEmailException();
+		return user;
 	}
   
 	public static boolean isMailExists(String mobileNumber) {

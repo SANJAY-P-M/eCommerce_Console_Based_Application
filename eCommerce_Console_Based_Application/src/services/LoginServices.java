@@ -1,11 +1,7 @@
 package services;
 
 import doa.UserTable;
-import doaException.EmailAlreadyExistsException;
-import doaException.MobileNumberAlreadyExistsException;
-import doaException.NoSuchEmailException;
 import eCommerce_Console_Based_Application.Assets;
-import eCommerce_Console_Based_Application.ECommerceApplication;
 import roles.Customer;
 import roles.User;
 
@@ -18,6 +14,8 @@ public class LoginServices {
 //		Get valid E-mail
 		UICards.prompt("E-mail");
 		String email = Assets.scan.nextLine();
+		
+//		Validating E-mail
 		boolean mailExists = UserTable.isMailExists(email);
 		boolean validMail = isValidEMail(email);
 		while(mailExists || !validMail) {
@@ -35,6 +33,8 @@ public class LoginServices {
 //		Get Valid Mobile Number
 		UICards.prompt("Mobile Number");
 		String mobileNumber = Assets.scan.nextLine();
+		
+//		Validating mobile number
 		boolean mobileNumberExists = UserTable.isMailExists(mobileNumber);
 		boolean validMobileNumber = isValidMobileNumber(mobileNumber);
 		while(mobileNumberExists || !validMobileNumber) {
@@ -56,29 +56,34 @@ public class LoginServices {
 //		password Logic
 		String password;
 		String confirmPassword;
+		
+		int attemmpts = 3;
 		do {
 			UICards.prompt("Password");
 			password = Assets.scan.nextLine();
+			
 			UICards.prompt("Confirm Password");
 			confirmPassword = Assets.scan.nextLine();
-			if(!password.equals(confirmPassword))
-				UICards.printWarning("password and confirm password mismatch");
-		}while(!password.equals(confirmPassword));
+			
+			if(!password.equals(confirmPassword)) {
+				UICards.printWarning("password and confirm password mismatch\n\t\t"+attemmpts+" left");
+			}
+			
+		}while(!password.equals(confirmPassword) && attemmpts > 0);
+		
+		if(attemmpts == 0) return null;
 		
 		Customer customer = null;
-		 customer = new Customer(fullName, email, mobileNumber, password);
-		ECommerceApplication.addUser(customer,"customer");
+		customer = new Customer(fullName, email, mobileNumber, password);
+		
+//		Inserting customer into user table
+		customer  = (Customer) UserTable.insert(customer,"customer");
+		
 		UICards.printWelcomeMessage(customer.getFullName());
 		return customer;
+		
 	}
 	
-	private static boolean isValidMobileNumber(String mobileNumber) {
-		return mobileNumber.matches("^\\d{10}$");
-	}
-	
-	private static boolean isValidEMail(String email) {
-		return email.matches("^[\\w.+\\-]+@[a-zA-Z\\d\\-]+(\\.[a-zA-Z]+)*$");
-	}
 
 	public static User authenticateCustomer() {
 		User user = null;
@@ -105,13 +110,9 @@ public class LoginServices {
 		do {
 				UICards.prompt("Password");
 	            password = Assets.scan.nextLine();
-	            try {
-	                if (password.equals(UserTable.getPassword(email))) {
-	                    user = UserTable.getUserWithEMail(email);
-	                }
-	            } catch (NoSuchEmailException e) {
-	                e.printStackTrace();
-	            }
+                if (password.equals(UserTable.getPassword(email))) {
+                    user = UserTable.getUserWithEMail(email);
+                }
 	            UICards.printWarning("Incorrect password "+attempts+" left");
 	            attempts--;
         } while (attempts > 0 && user == null);
@@ -119,4 +120,11 @@ public class LoginServices {
 		return user;
 	}
 	
+	private static boolean isValidMobileNumber(String mobileNumber) {
+		return mobileNumber.matches("^\\d{10}$");
+	}
+	
+	private static boolean isValidEMail(String email) {
+		return email.matches("^[\\w.+\\-]+@[a-zA-Z\\d\\-]+(\\.[a-zA-Z]+)*$");
+	}
 }
