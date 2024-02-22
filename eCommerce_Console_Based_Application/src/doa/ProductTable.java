@@ -134,5 +134,33 @@ public class ProductTable {
 			Assets.closeStatement(statement);
 		}
 	}
+
+	public static List<Product> getAvailableProducts() {
+		List<Product> list = new ArrayList<>();
+		ResultSet result = null;
+		PreparedStatement statement = null;
+		try {
+			statement = Connector.getInstance().getConnection().prepareStatement("SELECT * FROM PRODUCTS WHERE availableQuantity > 0");			
+			result = statement.executeQuery();
+			while(result.next()) {
+				list.add(
+					new Product(
+						result.getInt(1), 
+						result.getString(2), 
+						result.getString(3), 
+						result.getDouble(4), 
+						result.getDouble(5),
+						result.getInt(6)
+					)
+				);
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			Assets.closeResultSet(result);
+			Assets.closeStatement(statement);
+		}
+		return list;
+	}
 	
 }

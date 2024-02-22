@@ -20,7 +20,7 @@ public class User{
 		setPassword(password);
 	}
 	
-	public User(int userId,String fullName,String email,String mobileNumber,String password,List<Order> orders,Cart cart) {
+	public User(int userId,String fullName,String email,String mobileNumber,String password) {
 		setUserId(userId);
 		setEmail(email);
 		setFullName(fullName);
@@ -73,6 +73,8 @@ public class User{
 
 	public void setFullName(String fullName) {
 		this.fullName = fullName;
+//		Update in database
+		UserTable.updateFullName(this.userId , fullName);
 	}
 	
 	public String getPassword() {

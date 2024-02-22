@@ -115,5 +115,15 @@ public class Customer extends User {
 	public void setCart(Cart cart) {
 		this.cart = cart;
 	}
+
+	public void viewAllProducts() {
+		
+		List<Product> list = ProductTable.getAvailableProducts();
+		
+		for(Product i:list)
+			System.out.println(i);
+		
+		
+	}
 	
 }

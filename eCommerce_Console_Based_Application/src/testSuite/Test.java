@@ -61,13 +61,21 @@ public class Test {
 //		CartTable.insert(15, 1, 3);
 //		System.out.println( CartTable.getCart(15));
 		
+//		Updating mailId
+//		Customer customer = (Customer) UserTable.getUserWithEMail("sanjay@mail.com");
+//		System.out.println(customer);
+//		customer.setEmail("mail@mail.com");
+//
+//		System.out.println(customer);
 		
 		Customer customer = (Customer) UserTable.getUserWithEMail("mail@mail.com");
+		customer.setSelected(ProductTable.getProduct(1));
+		customer.addToCart(
+					2
+				);
 		System.out.println(customer);
-		customer.setEmail("sanjay@mail.com");
-		customer = (Customer) UserTable.getUserWithEMail("mail@mail.com");
-
-		System.out.println(customer);
+		
+		
 	}
 
 }

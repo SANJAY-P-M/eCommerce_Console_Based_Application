@@ -20,6 +20,14 @@ public class Assets {
 			"Log out"
 	};
 	
+//	Modify profile
+	public static String[] modifyProfile = {
+			"Change e-mail",
+			"Change full Name",
+			"Change Mobile Number",
+			"Change password",
+			"Back",
+	};
 	
 	// Helper functions for closing resources
 		public static void closeResultSet(ResultSet resultSet) {

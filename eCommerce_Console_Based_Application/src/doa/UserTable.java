@@ -80,7 +80,7 @@ public class UserTable {
 			result = statement.executeQuery();
 			if(result.next()) {
 				String role = result.getString("role");
-				user = new User(result.getString("fullName"), result.getString("email"), result.getString("mobileNumber"), result.getString("password"));
+				user = new User(result.getInt("userId") , result.getString("fullName"), result.getString("email"), result.getString("mobileNumber"), result.getString("password"));
 				return UserFactory.getFactoryInstance().getInstance(user, role);
 			}
 		} catch (SQLException e) {
@@ -141,5 +141,19 @@ public class UserTable {
 			Assets.closeStatement(statement);;
 		}
 		
+	}
+
+	public static void updateFullName(int userId,String fullName) {
+		PreparedStatement statement = null;
+		try {
+			statement = Connector.getInstance().getConnection().prepareStatement("UPDATE USERS SET fullName = ? WHERE userId = ?");
+			statement.setString(1, fullName);
+			statement.setInt(2, userId);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			Assets.closeStatement(statement);;
+		}
 	}
 }
