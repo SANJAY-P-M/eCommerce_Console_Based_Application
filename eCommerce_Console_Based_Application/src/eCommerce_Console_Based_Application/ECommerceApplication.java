@@ -2,6 +2,7 @@ package eCommerce_Console_Based_Application;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import doa.CartTable;
 import doa.OrderTable;
@@ -15,7 +16,11 @@ import services.UICards;
 
 public class ECommerceApplication {
 	
-	List<Product> products;
+	private List<Product> products;
+	
+	public List<Product> getProducts() {
+		return this.products;
+	}
 	
 	public ECommerceApplication(){
 		products = ProductTable.getAllProducts();
@@ -26,5 +31,11 @@ public class ECommerceApplication {
 			if(i.getId() == productId)
 				return i;
 		return null;
+	}
+
+	public List<Product> getAvailableProducts() {
+		return products.stream()
+				.filter(element -> element.getAvailableQuantity() > 0)
+				.collect(Collectors.toList());
 	}
 }

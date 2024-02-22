@@ -1,23 +1,25 @@
 package roles;
 
 import java.util.Map;
+import java.util.Map.Entry;
 
 public class Cart {
 	private int userId;
 	private Map<Product,Integer> productAndQuantity;
-	private int netAmount;
+	private double netAmount;
 	
 	public Cart(int userId,Map<Product,Integer> productAndQuantity) {
 		setProductsAndQuantity(productAndQuantity);
 		setUserId(userId);
+		this.netAmount = calculateNetAmount();
 	}
 	
-	
-	public int getNetAmount() {
-		return netAmount;
-	}
-	public void setNetAmount(int netAmount) {
-		this.netAmount = netAmount;
+	private double calculateNetAmount() {
+		int total = 0;
+		for(Entry<Product,Integer> i:productAndQuantity.entrySet()) {
+			total += i.getKey().getPrice() * i.getValue();
+		}
+		return total;
 	}
 
 	public Map<Product,Integer> getProductsAndQuantity() {

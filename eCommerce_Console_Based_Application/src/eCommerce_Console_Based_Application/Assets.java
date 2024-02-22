@@ -28,6 +28,10 @@ public class Assets {
 			"Change password",
 			"Back",
 	};
+
+	public static String[] selectProduct = {"Select product with product Id ","Back"};
+
+	public static String[] doWithProduct = {"Add to cart","Place order","Back"};
 	
 	// Helper functions for closing resources
 		public static void closeResultSet(ResultSet resultSet) {

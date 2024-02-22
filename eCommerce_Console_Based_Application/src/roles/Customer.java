@@ -116,14 +116,6 @@ public class Customer extends User {
 		this.cart = cart;
 	}
 
-	public void viewAllProducts() {
-		
-		List<Product> list = ProductTable.getAvailableProducts();
-		
-		for(Product i:list)
-			System.out.println(i);
-		
-		
-	}
+	
 	
 }

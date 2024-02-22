@@ -69,6 +69,7 @@ public class Test {
 //		System.out.println(customer);
 		
 		Customer customer = (Customer) UserTable.getUserWithEMail("mail@mail.com");
+		System.out.println(customer.getCart());
 		customer.setSelected(ProductTable.getProduct(1));
 		customer.addToCart(
 					2

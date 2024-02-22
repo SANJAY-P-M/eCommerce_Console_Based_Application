@@ -43,7 +43,7 @@ public class LoginServices {
 		String mobileNumber = Assets.scan.nextLine();
 		
 //		Validating mobile number
-		boolean mobileNumberExists = UserTable.isMailExists(mobileNumber);
+		boolean mobileNumberExists = UserTable.isMobileNumberExists(mobileNumber);
 		boolean validMobileNumber = isValidMobileNumber(mobileNumber);
 		while(mobileNumberExists || !validMobileNumber) {
 			if(!validMobileNumber)
