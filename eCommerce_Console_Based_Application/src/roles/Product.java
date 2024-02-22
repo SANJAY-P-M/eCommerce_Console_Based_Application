@@ -66,15 +66,14 @@ public class Product {
 	
 	@Override
 	public String toString() {
-		 return "Product{" +
-	                "id='" + id + '\'' +
-	                ", name='" + name + '\'' +
-	                ", description='" + description + '\'' +
-	                ", price=" + price +
-	                ", review=" + review +
-	                ", availableQuantity=" + availableQuantity +
-	                "}\n";
-	}
+        return "Product Information:\n" +
+                "\tID: " + id + "\n" +
+                "\tName: " + name + "\n" +
+                "\tDescription: " + description + "\n" +
+                "\tPrice: $" + String.format("%.2f", price) + "\n" +
+                "\tReview: " + review + "/5.0\n" +
+                "\tAvailable Quantity: " + availableQuantity + "\n";
+    }
 	
 	@Override
 	public boolean equals(Object obj) {

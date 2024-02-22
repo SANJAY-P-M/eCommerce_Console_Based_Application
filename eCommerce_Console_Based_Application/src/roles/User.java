@@ -3,6 +3,7 @@ package roles;
 import java.util.List;
 
 import doa.ProductTable;
+import doa.UserTable;
 import eCommerce_Console_Based_Application.ECommerceApplication;
 
 public class User{
@@ -11,8 +12,6 @@ public class User{
 	private String email;
 	private String password;
 	private String mobileNumber;
-	private List<Order> orders;
-	private Cart cart;
 	
 	public User(String fullName,String email,String mobileNumber, String password) {
 		setFullName(fullName);
@@ -26,9 +25,7 @@ public class User{
 		setEmail(email);
 		setFullName(fullName);
 		setMobileNumber(mobileNumber);
-		setOrders(orders);
 		setPassword(password);
-		setCart(cart);
 	}
 	
 //	Copy constructor
@@ -38,8 +35,6 @@ public class User{
 		setEmail(user.email);
 		setMobileNumber(user.mobileNumber);
 		setPassword(user.password);
-		setOrders(user.orders);
-		setCart(user.cart);
 	}
 	
 	public void setUserId(int userName) {
@@ -57,6 +52,7 @@ public class User{
 
 	public void setEmail(String email) {
 		this.email = email;
+		UserTable.updateMail(this.getUserId(),email);
 	}
 
 
@@ -79,22 +75,6 @@ public class User{
 		this.fullName = fullName;
 	}
 	
-	public List<Order> getOrders() {
-		return orders;
-	}
-	
-	public void setOrders(List<Order> orders) {
-		this.orders = orders;
-	}
-
-	public Cart getCart() {
-		return cart;
-	}
-	
-	public void setCart(Cart cart) {
-		this.cart = cart;
-	}
-	
 	public String getPassword() {
 		return password;
 	}
@@ -103,16 +83,16 @@ public class User{
 		this.password = password;
 	}
 	
-	 @Override
-    public String toString() {
-        return "User{" +
-                "userName='" + userId + '\'' +
-                ", fullName='" + fullName + '\'' +
-                ", email='" + email + '\'' +
-                ", mobileNumber='" + mobileNumber + '\'' +
-                ", orders=" + orders +
-                ",cart = "+ cart +
-                '}';
-    }
+	@Override
+	public String toString() {
+	    return "User Details:\n" +
+	           "\tUser ID: " + userId + "\n" +
+	           "\tFull Name: " + fullName + "\n" +
+	           "\tEmail: " + email + "\n" +
+	           "\tPassword: " + password + "\n" +
+	           "\tMobile Number: " + mobileNumber;
+	}
+
+
 
 }

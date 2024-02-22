@@ -13,12 +13,12 @@ import roles.User;
 
 public class CartTable {
 	
-	public static void insert(User user,Product product,int quantity) {
+	public static void insert(int userId,int productId,int quantity) {
 		PreparedStatement statement = null;
 		try {
-			statement = Connector.getInstance().getConnection().prepareStatement("INSERT INTO Cart VALUES ( ? , ? , ? )");
-			statement.setInt(1, user.getUserId());
-			statement.setInt(2, product.getId());
+			statement = Connector.getInstance().getConnection().prepareStatement("INSERT INTO Carts VALUES ( ? , ? , ? )");
+			statement.setInt(1, userId);
+			statement.setInt(2, productId);
 			statement.setInt(3, quantity);
 			statement.executeUpdate();
 		} catch (SQLException e) {

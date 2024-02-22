@@ -78,17 +78,11 @@ public class UserTable {
 			statement = Connector.getInstance().getConnection().prepareStatement("SELECT * FROM users WHERE email = ?");
 			statement.setString(1, email);
 			result = statement.executeQuery();
-			result.next();
-			int userId = result.getInt("userId");
-			user =  new User(
-					userId,
-					result.getString("fullName"),
-					email, 
-					result.getString("mobileNumber"),
-					result.getString("password"),
-					OrderTable.getOrders(userId),
-					CartTable.getCart(userId)
-				);
+			if(result.next()) {
+				String role = result.getString("role");
+				user = new User(result.getString("fullName"), result.getString("email"), result.getString("mobileNumber"), result.getString("password"));
+				return UserFactory.getFactoryInstance().getInstance(user, role);
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -132,5 +126,20 @@ public class UserTable {
 			Assets.closeStatement(statement);
 		}
 		return isFound;
+	}
+
+	public static void updateMail(int userId, String email) {
+		PreparedStatement statement = null;
+		try {
+			statement = Connector.getInstance().getConnection().prepareStatement("UPDATE USERS SET email = ? WHERE userId = ?");
+			statement.setString(1, email);
+			statement.setInt(2, userId);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			Assets.closeStatement(statement);;
+		}
+		
 	}
 }

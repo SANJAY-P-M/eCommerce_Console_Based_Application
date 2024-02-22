@@ -1,6 +1,7 @@
 package roles;
 
 
+import java.util.List;
 import java.util.Map;
 
 import doa.CartTable;
@@ -12,10 +13,14 @@ import eCommerce_Console_Based_Application.ECommerceApplication;
 
 public class Customer extends User {
 
+	private List<Order> orders;
+	private Cart cart;
 	private Product selected;
 	
 	public Customer(User user) {
 		super(user);
+		orders = OrderTable.getOrders(this.getUserId());
+		cart = CartTable.getCart(this.getUserId());
 	}
 	
 	public Customer(String fullName , String email , String mobileNumber,String password) {
@@ -55,7 +60,7 @@ public class Customer extends User {
 			throw new StockNotAvailable(this.getSelected());
 		
 //		Insert in table
-		CartTable.insert(this, this.getSelected(), quantity);
+		CartTable.insert(this.getUserId(), selected.getId(), quantity);
 		
 //		update in object
 		Map<Product,Integer> map = this.getCart().getProductsAndQuantity();
@@ -93,6 +98,22 @@ public class Customer extends User {
 		CartTable.remove(getUserId(),product.getId());
 		
 		this.getCart().getProductsAndQuantity().remove(product);
+	}
+
+	public List<Order> getOrders() {
+		return orders;
+	}
+
+	public void setOrders(List<Order> orders) {
+		this.orders = orders;
+	}
+
+	public Cart getCart() {
+		return cart;
+	}
+
+	public void setCart(Cart cart) {
+		this.cart = cart;
 	}
 	
 }

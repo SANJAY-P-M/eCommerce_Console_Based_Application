@@ -2,6 +2,7 @@ package testSuite;
 
 import java.util.List;
 
+import doa.CartTable;
 import doa.OrderTable;
 import doa.ProductTable;
 import doa.UserTable;
@@ -15,10 +16,8 @@ public class Test {
 
 	public static void main(String[] args) throws Exception {
 		
-		Assets.createConnection();
-		
 //		ProductTable.addProduct()
-//		ProductTable.addProduct(new Product("asus laptop","best laptop under 1000",1000.0,5.6,10));
+//		ProductTable.insertProduct(new Product("asus laptop","best laptop under 1000",1000.0,5.6,10));
 		
 //		ProductTable.getProductsList();
 //		System.out.println(ProductTable.getAllProducts());
@@ -57,7 +56,18 @@ public class Test {
 //		System.out.println(ProductTable.isProductAvailable(ProductTable.getProduct(2), 23));
 		
 //		reduce quantity
-		ProductTable.reduceQuantity(ProductTable.getProduct(2), 20);
+//		ProductTable.reduceQuantity(ProductTable.getProduct(2), 20);
+		
+//		CartTable.insert(15, 1, 3);
+//		System.out.println( CartTable.getCart(15));
+		
+		
+		Customer customer = (Customer) UserTable.getUserWithEMail("mail@mail.com");
+		System.out.println(customer);
+		customer.setEmail("sanjay@mail.com");
+		customer = (Customer) UserTable.getUserWithEMail("mail@mail.com");
+
+		System.out.println(customer);
 	}
 
 }

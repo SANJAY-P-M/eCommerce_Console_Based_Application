@@ -25,12 +25,39 @@ public class Main {
 			}
 		}
 		if(user instanceof Customer) {
-			
+			customerView((Customer) user);
 		} else if( user instanceof Admin) {
-			
+			adminView((Admin)user);
 		} else if(user instanceof Employee) {
-			
+			employeeViwe((Employee)user);
 		}
 		System.out.println(user);
 	}
+
+	private static void customerView(Customer customer) {
+		int choice;
+		
+		do{
+			UICards.printChoiceList(Assets.customerHome);
+			choice = Assets.scan.nextInt();
+			switch (choice) {
+				case 1:
+					System.out.println(customer);
+					
+					break;
+					
+				default:
+					break;
+			}
+		}while(choice != 5);
+	}
+
+	private static void employeeViwe(Employee user) {
+		
+	}
+
+	private static void adminView(Admin user) {
+		
+	}
+
 }
