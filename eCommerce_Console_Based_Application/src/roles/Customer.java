@@ -44,8 +44,8 @@ public class Customer extends User {
 			throw new StockNotAvailable(getSelected());
 		
 //		Update in table 
-		Order order = OrderTable.insertOrder(this, this.getSelected(), quantity);
-		ProductTable.reduceQuantity(this.getSelected(), quantity);
+		Order order = OrderTable.insertOrder(this.getUserId(), this.selected, quantity);
+		this.selected.setAvailableQuantity(selected.getAvailableQuantity() - quantity);
 		
 //		Update in local instance
 		this.getOrders().add(order);

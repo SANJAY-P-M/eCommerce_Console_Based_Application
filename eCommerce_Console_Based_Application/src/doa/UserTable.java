@@ -156,4 +156,32 @@ public class UserTable {
 			Assets.closeStatement(statement);;
 		}
 	}
+
+	public static void updateMobileNumber(int userId ,String mobileNumber) {
+		PreparedStatement statement = null;
+		try {
+			statement = Connector.getInstance().getConnection().prepareStatement("UPDATE USERS SET mobileNumber = ? WHERE userId = ?");
+			statement.setString(1, mobileNumber);
+			statement.setInt(2, userId);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			Assets.closeStatement(statement);;
+		}
+	}
+
+	public static void updatePassword(int userId, String password) {
+		PreparedStatement statement = null;
+		try {
+			statement = Connector.getInstance().getConnection().prepareStatement("UPDATE USERS SET password = ? WHERE userId = ?");
+			statement.setString(1, password);
+			statement.setInt(2, userId);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			Assets.closeStatement(statement);;
+		}
+	}
 }

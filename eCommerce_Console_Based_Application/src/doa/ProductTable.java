@@ -119,20 +119,7 @@ public class ProductTable {
 	}
 
 	public static void reduceQuantity(Product product, int quantity){
-		PreparedStatement statement = null;
-		try {
-			statement = Connector.getInstance().getConnection().prepareStatement("UPDATE PRODUCTS SET availableQuantity = ? WHERE productId = ? ");
-			Product temp = getProduct(product.getId());
-			statement.setInt(1, temp.getAvailableQuantity()-quantity);
-			statement.setInt(2, product.getId());
-			statement.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (NoSuchProductException e) {
-			e.printStackTrace();
-		}finally {
-			Assets.closeStatement(statement);
-		}
+		
 	}
 
 	public static List<Product> getAvailableProducts() {
@@ -161,6 +148,20 @@ public class ProductTable {
 			Assets.closeStatement(statement);
 		}
 		return list;
+	}
+
+	public static void updateQuantity(int id, int quantity) {
+		PreparedStatement statement = null;
+		try {
+			statement = Connector.getInstance().getConnection().prepareStatement("UPDATE PRODUCTS SET availableQuantity = ? WHERE productId = ? ");
+			statement.setInt(1, quantity);
+			statement.setInt(2, id);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			Assets.closeStatement(statement);
+		}
 	}
 	
 }

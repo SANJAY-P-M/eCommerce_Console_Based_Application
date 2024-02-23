@@ -38,7 +38,7 @@ public class OrderItems {
 	public static void insert(int orderId, Map<Product,Integer> products) {
 		PreparedStatement statement = null;
 		try {
-			statement = Connector.getInstance().getConnection().prepareStatement("INSERT INTO OrderItems VALUES (? , ? , ?)");
+			statement = Connector.getInstance().getConnection().prepareStatement("INSERT INTO OrderItems (orderId , productId , quantity) VALUES (? , ? , ?)");
 			for(Map.Entry<Product, Integer> i:products.entrySet()) {
 				statement.setInt(1, orderId);
 				statement.setInt(2, i.getKey().getId());

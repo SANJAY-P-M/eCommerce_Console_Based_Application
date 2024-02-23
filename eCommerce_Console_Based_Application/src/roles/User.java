@@ -13,29 +13,31 @@ public class User{
 	private String password;
 	private String mobileNumber;
 	
-	public User(String fullName,String email,String mobileNumber, String password) {
-		setFullName(fullName);
-		setEmail(email);
-		setMobileNumber(mobileNumber);
-		setPassword(password);
+	public User(String fullName, String email, String mobileNumber, String password) {
+	    this.fullName = fullName;
+	    this.email = email;
+	    this.mobileNumber = mobileNumber;
+	    this.password = password;
 	}
+
 	
-	public User(int userId,String fullName,String email,String mobileNumber,String password) {
-		setUserId(userId);
-		setEmail(email);
-		setFullName(fullName);
-		setMobileNumber(mobileNumber);
-		setPassword(password);
-	}
+	public User(int userId, String fullName, String email, String mobileNumber, String password) {
+        this.userId = userId;
+        this.fullName = fullName;
+        this.email = email;
+        this.mobileNumber = mobileNumber;
+        this.password = password;
+    }
 	
 //	Copy constructor
 	public User(User user) {
-		setUserId(user.userId);
-		setFullName(user.fullName);
-		setEmail(user.email);
-		setMobileNumber(user.mobileNumber);
-		setPassword(user.password);
+	    this.userId = user.userId;
+	    this.fullName = user.fullName;
+	    this.email = user.email;
+	    this.mobileNumber = user.mobileNumber;
+	    this.password = user.password;
 	}
+
 	
 	public void setUserId(int userName) {
 		this.userId = userName;
@@ -63,6 +65,8 @@ public class User{
 
 	public void setMobileNumber(String mobileNumber) {
 		this.mobileNumber = mobileNumber;
+//		Update in database
+		UserTable.updateMobileNumber(this.userId , mobileNumber);
 	}
 
 
@@ -83,6 +87,8 @@ public class User{
 	
 	public void setPassword(String password) {
 		this.password = password;
+//		Update in database
+		UserTable.updatePassword(this.userId,password);
 	}
 	
 	@Override

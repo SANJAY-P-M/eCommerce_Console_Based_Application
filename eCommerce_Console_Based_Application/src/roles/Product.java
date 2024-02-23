@@ -1,5 +1,7 @@
 package roles;
 
+import doa.ProductTable;
+
 public class Product {
 	private int id;
 	private String name;
@@ -62,6 +64,8 @@ public class Product {
 	
 	public void setAvailableQuantity(int quantity) {
 		this.availableQuantity = quantity;
+//		update in database
+		ProductTable.updateQuantity(this.id,quantity);
 	}
 	
 	@Override
@@ -79,6 +83,6 @@ public class Product {
 	public boolean equals(Object obj) {
 		if(this.getClass() != obj.getClass())
 			return false;
-		else return  id == ((Product) obj).getId();
+		else return (id == ((Product) obj).getId());
 	}
 }

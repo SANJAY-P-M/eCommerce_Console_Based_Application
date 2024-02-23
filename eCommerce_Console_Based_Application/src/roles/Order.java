@@ -10,7 +10,7 @@ public class Order{
 	private Map<Product,Integer> productAndQuantity;
 	private Timestamp date;
 	private String status;
-	private int totalAmount;
+	private double totalAmount;
 	
 	public Order(int orderId, int userId, Timestamp orderDate , String status, Map<Product,Integer> productAndQuantity) {
 		setDate(orderDate);
@@ -21,7 +21,7 @@ public class Order{
 		setProductAndQuantity(productAndQuantity);
 	}
 
-	public Order(int orderId, int userId, Timestamp orderDate, int totalAmount, String status,
+	public Order(int orderId, int userId, Timestamp orderDate, double totalAmount, String status,
 			Map<Product, Integer> allProducts) {
 		setDate(orderDate);
 		setOrderId(orderId);
@@ -62,11 +62,11 @@ public class Order{
 		this.status = status;
 	}
 
-	public int getTotalAmount() {
+	public double getTotalAmount() {
 		return totalAmount;
 	}
 
-	public void setTotalAmount(int totalAmount) {
+	public void setTotalAmount(double totalAmount) {
 		this.totalAmount = totalAmount;
 	}
 
@@ -86,4 +86,20 @@ public class Order{
 		this.userId = userId;
 	}
 	
+	@Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("Order ID: ").append(orderId).append("\n");
+        stringBuilder.append("User ID: ").append(userId).append("\n");
+        stringBuilder.append("Date: ").append(date).append("\n");
+        stringBuilder.append("Status: ").append(status).append("\n");
+        stringBuilder.append("Products and Quantity: \n");
+        for (Map.Entry<Product, Integer> entry : productAndQuantity.entrySet()) {
+        	Product product = entry.getKey();
+        	int quantity = entry.getValue();
+        	stringBuilder.append(" - ").append(product.getName()).append(": ").append(quantity).append("\n");
+        }
+        stringBuilder.append("Total Amount: ").append(totalAmount).append("\n");
+        return stringBuilder.toString();
+    }
 }

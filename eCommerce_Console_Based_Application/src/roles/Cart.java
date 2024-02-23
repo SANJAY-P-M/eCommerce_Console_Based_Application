@@ -40,6 +40,10 @@ public class Cart {
 		this.userId = userId;
 	}
 	
+	public double getNetAmount() {
+		return netAmount;
+	}
+	
 	@Override
 	public String toString() {
         StringBuilder stringBuilder = new StringBuilder();

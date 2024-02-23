@@ -58,6 +58,13 @@ public class Main {
 				case 2:
 					System.out.println(app.getAvailableProducts());
 					selectProduct(customer);
+					break;
+				case 3:
+					UICards.printSucessMessage(customer.getCart().toString());
+//					cartOperation();
+					break;
+				case 4:
+					UICards.printSucessMessage(customer.getOrders().toString());
 				default:
 					break;
 			}
@@ -94,6 +101,7 @@ public class Main {
 					choice1 = Assets.scan.nextInt();
 					switch (choice1) {
 						case 1:
+							UICards.prompt("quantity to add ");
 							int quantity = Assets.scan.nextInt();
 							try {
 								customer.addToCart(quantity);
@@ -105,14 +113,15 @@ public class Main {
 							}
 							break;
 						case 2:
+							UICards.prompt("quantity to make order");
 							quantity = Assets.scan.nextInt();
 							try {
 								customer.makeOrder(quantity);
-								UICards.printSucessMessage("Your is placed check in view profile");
+								UICards.printSucessMessage("Your is placed check in view orders");
 							} catch (StockNotAvailable e) {
-								System.out.println(e.getMessage());
+								UICards.printWarning(e.getMessage());
 							} catch (ProductNotSelectedException e) {
-								System.out.println(e.getMessage());
+								UICards.printWarning(e.getMessage());
 							}
 							break;
 						case 3:
@@ -121,7 +130,7 @@ public class Main {
 							UICards.printWarning("Invalid option");
 							break;
 					}
-				}while(choice != 3);
+				}while(choice1 != 3);
 			default:
 				UICards.printWarning("Invalid option");
 				break;
