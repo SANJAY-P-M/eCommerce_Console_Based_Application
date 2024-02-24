@@ -9,8 +9,8 @@ public class Cart {
 	private double netAmount;
 	
 	public Cart(int userId,Map<Product,Integer> productAndQuantity) {
-		setProductsAndQuantity(productAndQuantity);
-		setUserId(userId);
+		this.productAndQuantity = productAndQuantity;
+		this.userId = userId;
 		this.netAmount = calculateNetAmount();
 	}
 	

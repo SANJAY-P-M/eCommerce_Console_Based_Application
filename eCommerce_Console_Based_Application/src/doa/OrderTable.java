@@ -49,7 +49,7 @@ public class OrderTable {
 		return order;
 	}
 	
-	private static Order getOrder(int orderId) {
+	public static Order getOrder(int orderId) {
 		PreparedStatement statement= null;
 		ResultSet result = null;
 		Order order = null;

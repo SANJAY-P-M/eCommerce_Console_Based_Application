@@ -131,6 +131,8 @@ public class Main {
 							break;
 					}
 				}while(choice1 != 3);
+			case 2:
+				break;
 			default:
 				UICards.printWarning("Invalid option");
 				break;
@@ -183,8 +185,29 @@ public class Main {
 		}while(choice != 5);
 	}
 
-	private static void employeeViwe(Employee user) {
+	private static void employeeViwe(Employee employee) {
+		int choice;
 		
+//		{
+//			"View profile",
+//			"Get his work",
+//			"logout"
+//		}
+		
+		do {
+			UICards.printChoiceList(Assets.employeeHome);
+			choice = Assets.scan.nextInt();
+			switch (choice) {
+			case 1:
+				System.out.println(employee);
+				modifyProfile(employee);
+				break;
+			case 2:
+				System.out.println(employee.getHisWorks());
+			default:
+				break;
+			}
+		} while (choice != 3);
 	}
 
 	private static void adminView(Admin user) {

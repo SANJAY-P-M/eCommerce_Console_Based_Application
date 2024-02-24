@@ -115,7 +115,4 @@ public class Customer extends User {
 	public void setCart(Cart cart) {
 		this.cart = cart;
 	}
-
-	
-	
 }
