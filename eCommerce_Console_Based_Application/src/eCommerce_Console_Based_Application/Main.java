@@ -210,8 +210,50 @@ public class Main {
 		} while (choice != 3);
 	}
 
-	private static void adminView(Admin user) {
+	private static void adminView(Admin admin) {
+//		{
+//			"View profile",
+//			"Add new Employee",
+//			"Remove a employee",
+//			"View products",
+//			"Logout",
+//		}
 		
+		int choice;
+		
+		do {
+			UICards.printChoiceList(Assets.adminHome);
+			choice = Assets.scan.nextInt();
+			
+			switch (choice) {
+			case 1:
+				System.out.println(admin);
+				modifyProfile(admin);
+				break;
+			case 2:
+				Assets.scan.nextLine();
+				String email = LoginServices.getNewEmail();
+				String mobileNumber = LoginServices.getNewMobileNumber();
+				String password = LoginServices.getNewPassword();
+				if(password == null) break;
+				UICards.prompt("Full Name");
+				String fullName = Assets.scan.nextLine();
+				if(admin.addEmployee(new User(fullName, email, mobileNumber, password)))
+					UICards.printSucessMessage("Employee added sucessfully \n\t e-mail : "+email+"\n\t Password "+password);
+				break;
+			case 3:
+				UICards.prompt("Enter employee E-mail ");
+				email = LoginServices.getExistingEmail();
+				if(admin.removeEmployee(email)) {
+					UICards.printSucessMessage("Employee removed sucessfully !");
+				} else {
+					UICards.printWarning("There is no employee with mail : "+email);
+				}
+			default:
+				break;
+			}
+			
+		} while(choice != 4);
 	}
 
 }

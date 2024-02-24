@@ -22,6 +22,7 @@ public class LoginServices {
 		
 //		Password
 		String password = getNewPassword();
+		if(password == null) return null;
 		
 		Customer customer = null;
 		customer = new Customer(fullName, email, mobileNumber, password);
@@ -88,20 +89,7 @@ public class LoginServices {
 		User user = null;
 		
 //		Get valid E-mail
-		UICards.prompt("E-Mail");
-		String email = Assets.scan.nextLine();
-		boolean mailExists = UserTable.isMailExists(email);
-		boolean validMail = isValidEMail(email);
-		while(!mailExists || !validMail) {
-			if(!validMail)
-				UICards.printWarning("E-mail must be in pattern (mail@mail.com)");
-			else if(!mailExists)
-				UICards.printWarning("E-Mail does not exists ");
-			UICards.prompt("E-mail");
-			email = Assets.scan.nextLine();
-			mailExists = UserTable.isMailExists(email);
-			validMail = isValidEMail(email);
-		}
+		String email = getExistingEmail();
 		
 //		Get password
 		String password;
@@ -119,7 +107,29 @@ public class LoginServices {
 		
 		return user;
 	}
+
 	
+	
+	public static String getExistingEmail() {
+		UICards.prompt("E-Mail");
+		String email = Assets.scan.nextLine();
+		boolean mailExists = UserTable.isMailExists(email);
+		boolean validMail = isValidEMail(email);
+		while(!mailExists || !validMail) {
+			if(!validMail)
+				UICards.printWarning("E-mail must be in pattern (mail@mail.com)");
+			else if(!mailExists)
+				UICards.printWarning("E-Mail does not exists ");
+			UICards.prompt("E-mail");
+			email = Assets.scan.nextLine();
+			mailExists = UserTable.isMailExists(email);
+			validMail = isValidEMail(email);
+		}
+		return email;
+	}
+
+
+
 	private static boolean isValidMobileNumber(String mobileNumber) {
 		return mobileNumber.matches("^\\d{10}$");
 	}

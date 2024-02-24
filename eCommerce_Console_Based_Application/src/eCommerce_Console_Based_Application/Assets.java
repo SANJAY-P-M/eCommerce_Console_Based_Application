@@ -34,6 +34,8 @@ public class Assets {
 	public static String[] doWithProduct = {"Add to cart","Place order","Back"};
 
 	public static String[] employeeHome = {"View profile ","Get his work","logout"};
+
+	public static String[] adminHome = {"View profile","Add new Employee","Remove a employee","View products","Logout"};
 	
 	// Helper functions for closing resources
 		public static void closeResultSet(ResultSet resultSet) {

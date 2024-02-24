@@ -4,8 +4,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
+import java.util.List;
+import java.util.ArrayList;
 import eCommerce_Console_Based_Application.Assets;
+import roles.Employee;
 import roles.User;
 import roles.UserFactory;
 public class UserTable {
@@ -167,7 +169,7 @@ public class UserTable {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			Assets.closeStatement(statement);;
+			Assets.closeStatement(statement);
 		}
 	}
 
@@ -183,5 +185,33 @@ public class UserTable {
 		} finally {
 			Assets.closeStatement(statement);;
 		}
+	}
+
+	public static boolean delete(String email) {
+		PreparedStatement statement = null;
+		try {
+			statement = Connector.getInstance().getConnection().prepareStatement("DELETE FROM Users WHERE email = ?");
+			statement.setString(1, email);
+			return statement.executeUpdate() == 1;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	public static List<Employee> getEmployees() {
+		ResultSet result;
+		List<Employee> employees = new ArrayList<Employee>();
+		try {
+			result = Connector.getInstance().getConnection().prepareStatement("SELECT * FROM users WHERE role = \"employee\" ").executeQuery();
+			while(result.next()) {
+				User user = new User(result.getInt("userId"), result.getString("fullName"), result.getString("email"), result.getString("mobileNumber"), result.getString("password"));
+				Employee emp = new Employee(user);
+				employees.add(emp);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return employees;
 	}
 }

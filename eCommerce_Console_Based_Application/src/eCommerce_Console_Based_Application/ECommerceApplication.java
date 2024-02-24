@@ -18,7 +18,7 @@ public class ECommerceApplication {
 	
 	private List<Product> products;
 	
-	public List<Product> getProducts() {
+	public List<Product> getAllProducts() {
 		return this.products;
 	}
 	
