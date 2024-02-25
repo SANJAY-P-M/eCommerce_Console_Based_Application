@@ -48,8 +48,15 @@ public class Product {
 	public double getPrice() {
 		return price;
 	}
-	public void setPrice(double price) {
-		this.price = price;
+	public boolean setPrice(double price) {
+		if(price > 0) {
+			this.price = price;
+//		Update in database
+			ProductTable.updatePrice(this.id,price);
+			return true;
+		} else {
+			return false;
+		}
 	}
 	public double getReview() {
 		return review;
@@ -62,10 +69,15 @@ public class Product {
 		return availableQuantity;
 	}
 	
-	public void setAvailableQuantity(int quantity) {
-		this.availableQuantity = quantity;
+	public boolean setAvailableQuantity(int quantity) {
+		if(quantity > 0) {
+			this.availableQuantity = quantity;
 //		update in database
-		ProductTable.updateQuantity(this.id,quantity);
+			ProductTable.updateQuantity(this.id,quantity);
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	@Override

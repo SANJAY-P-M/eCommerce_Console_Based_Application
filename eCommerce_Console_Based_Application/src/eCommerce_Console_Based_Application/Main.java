@@ -1,5 +1,7 @@
 package eCommerce_Console_Based_Application;
 
+import java.util.List;
+
 import doaException.ProductNotSelectedException;
 import doaException.StockNotAvailable;
 import roles.Admin;
@@ -25,17 +27,20 @@ public class Main {
 					break;
 				case 2:
 					user = LoginServices.authenticateCustomer();
-					break;			
+					break;
+				case 3:
+					return;
 			}
+			if(user instanceof Customer) {
+				customerView((Customer) user);
+			} else if( user instanceof Admin) {
+				adminView((Admin)user);
+			} else if(user instanceof Employee) {
+				employeeViwe((Employee)user);
+			}
+			user = null;
+			System.out.println(user);
 		}
-		if(user instanceof Customer) {
-			customerView((Customer) user);
-		} else if( user instanceof Admin) {
-			adminView((Admin)user);
-		} else if(user instanceof Employee) {
-			employeeViwe((Employee)user);
-		}
-		System.out.println(user);
 	}
 
 	private static void customerView(Customer customer) {
@@ -65,6 +70,8 @@ public class Main {
 					break;
 				case 4:
 					UICards.printSucessMessage(customer.getOrders().toString());
+				case 5:
+					break;
 				default:
 					break;
 			}
@@ -204,6 +211,8 @@ public class Main {
 				break;
 			case 2:
 				System.out.println(employee.getHisWorks());
+			case 3:
+				break;
 			default:
 				break;
 			}
@@ -215,7 +224,7 @@ public class Main {
 //			"View profile",
 //			"Add new Employee",
 //			"Remove a employee",
-//			"View products",
+//			"View All products",
 //			"Logout",
 //		}
 		
@@ -249,11 +258,93 @@ public class Main {
 				} else {
 					UICards.printWarning("There is no employee with mail : "+email);
 				}
+				break;
+			case 4:
+				List<Product> allProducts = app.getAllProducts();
+
+				int choice1;
+				do {
+					System.out.print(allProducts);
+					UICards.printChoiceList(Assets.selectProduct);
+					choice1 = Assets.scan.nextInt();
+					switch (choice1) {
+					case 1:
+						UICards.prompt("product Id");
+						int productId = Assets.scan.nextInt();
+						Product product = app.getProduct(productId);
+						if(product == null) {
+							UICards.printWarning("Product does not exists");
+							break;
+						}
+						UICards.printSucessMessage("You selected\n"+product.toString());
+						admin.setSelected(product);
+						modifyProduct(admin,product);
+						break;
+					case 2:
+						break;
+					default:
+						break;
+					}
+					
+				}while(choice1 != 2);
+			case 5:
+				break;
 			default:
 				break;
 			}
 			
-		} while(choice != 4);
+		} while(choice != 5);
+	}
+
+	private static void modifyProduct(Admin admin,Product product) {
+		int choice;
+		
+//		{
+//			"Update Price",
+//			"Add Available Quantity",
+//			"Reduce Available quantity"
+//			"Back"
+//		}
+		
+		do {
+			UICards.printChoiceList(Assets.adminProduct);
+			choice = Assets.scan.nextInt();
+			switch (choice) {
+			case 1:
+				UICards.prompt("New Price");
+				double price = Assets.scan.nextDouble();
+				if(admin.updateProductPrice(price)) {
+					UICards.printSucessMessage("Price updated sucessfully to " + price);
+					UICards.printSucessMessage(product.toString());
+				} else {
+					UICards.printWarning("Cannot update price");
+				}
+				break;
+			case 2:
+				UICards.prompt("How many items to add");
+				int quantity = Assets.scan.nextInt();
+				if(admin.addQuantity(quantity)) {
+					UICards.printSucessMessage("Quantity added sucessfully");
+					UICards.printSucessMessage(product.toString());
+				} else {
+					UICards.printWarning("Cannot update price");
+				}
+				break;
+			case 3:
+				UICards.prompt("How many items to remove ");
+				quantity = Assets.scan.nextInt();
+				if(admin.reduceQuantity(quantity)) {
+					UICards.printSucessMessage("Quantity updated sucessfull to "+product.getAvailableQuantity());
+				} else {
+					UICards.printWarning("Cannot update product");
+				}
+				break;
+			case 4:
+				break;
+			default:
+				break;
+			}
+		}while(choice != 4);
 	}
 
 }

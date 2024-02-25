@@ -7,6 +7,7 @@ import doa.UserTable;
 public class Admin extends User{
 	
 	private List<Employee> employees;
+	private Product selected;
 	
 	public Admin(User user) {
 		super(user);
@@ -35,5 +36,24 @@ public class Admin extends User{
 	public void setEmployees(List<Employee> employees) {
 		this.employees = employees;
 	}
+
+	public void setSelected(Product product) {
+		this.selected = product;
+	}
 	
+	public void unSelect() {
+		this.selected = null;
+	}
+
+	public boolean updateProductPrice(double price) {
+		return this.selected.setPrice(price);
+	}
+
+	public boolean addQuantity(int quantity) {
+		return this.selected.setAvailableQuantity(this.selected.getAvailableQuantity()+quantity);
+	}
+
+	public boolean reduceQuantity(int quantity) {
+		return this.selected.setAvailableQuantity(this.selected.getAvailableQuantity() - quantity);
+	}
 }

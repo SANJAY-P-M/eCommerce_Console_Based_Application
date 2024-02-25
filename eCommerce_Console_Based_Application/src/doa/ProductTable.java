@@ -163,5 +163,20 @@ public class ProductTable {
 			Assets.closeStatement(statement);
 		}
 	}
+
+	public static boolean updatePrice(int id,double price) {
+		PreparedStatement statement = null;
+		try {
+			statement = Connector.getInstance().getConnection().prepareStatement("UPDATE PRODUCTS SET price = ? WHERE productId = ? ");
+			statement.setDouble(1, price);
+			statement.setInt(2, id);
+			return (statement.executeUpdate() == 1);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			Assets.closeStatement(statement);
+		}
+		return false;
+	}
 	
 }
