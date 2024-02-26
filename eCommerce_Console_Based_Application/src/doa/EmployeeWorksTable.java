@@ -31,4 +31,19 @@ public class EmployeeWorksTable {
 		return null;
 	}
 
+	public static boolean insert(int id, int orderId) {
+		PreparedStatement statement = null;
+		try {
+			statement = Connector.getInstance().getConnection().prepareStatement("INSERT INTO EmployeeWorks VALUES ( ? , ? )");
+			statement.setInt(1, id);
+			statement.setInt(2, orderId);
+			return statement.executeUpdate() == 1;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			Assets.closeStatement(statement);
+		}
+		return false;
+	}
+
 }

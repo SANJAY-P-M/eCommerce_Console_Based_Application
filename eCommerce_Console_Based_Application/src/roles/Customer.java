@@ -49,6 +49,10 @@ public class Customer extends User {
 		
 //		Update in local instance
 		this.getOrders().add(order);
+		
+//		Assign new order to an Employee
+		Employee employee =  ECommerceApplication.assignOrder(this.getUserId(), order);
+		order.setDelivery(employee);
 	}
 	
 	public boolean addToCart(int quantity) throws StockNotAvailable, ProductNotSelectedException {

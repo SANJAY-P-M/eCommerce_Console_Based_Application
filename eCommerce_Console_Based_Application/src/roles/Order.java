@@ -11,6 +11,7 @@ public class Order{
 	private Timestamp date;
 	private String status;
 	private double totalAmount;
+	private Employee delivery;
 	
 	public Order(int orderId, int userId, Timestamp orderDate , String status, Map<Product,Integer> productAndQuantity) {
 		setDate(orderDate);
@@ -99,7 +100,16 @@ public class Order{
         	int quantity = entry.getValue();
         	stringBuilder.append(" - ").append(product.getName()).append(": ").append(quantity).append("\n");
         }
-        stringBuilder.append("Total Amount: ").append(totalAmount).append("\n");
+        stringBuilder.append("Total Amount: ").append(totalAmount).append("\n")
+        	.append("Delivery Employee Number : ").append(this.delivery.getMobileNumber());
         return stringBuilder.toString();
     }
+
+	public Employee getDelivery() {
+		return delivery;
+	}
+
+	public void setDelivery(Employee delivery) {
+		this.delivery = delivery;
+	}
 }
